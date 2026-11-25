@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日 AI 面试题 · 2026-11-21 · AI Agent 任务规划与反思机制</title>
+<style>
+  :root {
+    --color-fg: #1f2328;
+    --color-muted: #59636e;
+    --color-link: #0969da;
+    --color-border: #d1d9e0;
+    --color-bg: #ffffff;
+    --color-code-bg: #f6f8fa;
+    --color-header-bg: #24292f;
+    --color-tag-bg: #ddf4ff;
+    --color-quote: #59636e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: var(--color-link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  /* 顶部深色仓库条 */
+  .repo-bar {
+    background: var(--color-header-bg);
+    color: #ffffff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .repo-bar .repo-name { font-weight: 600; font-size: 15px; }
+  .repo-bar .repo-path { color: #b7bdc7; }
+  .repo-bar svg { fill: #ffffff; vertical-align: text-bottom; }
+  .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 28px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin: 0 0 20px; }
+  h2 { font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 8px; margin: 36px 0 16px; }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; }
+  p { margin: 12px 0; }
+  blockquote { margin: 12px 0; padding: 0 16px; color: var(--color-quote); border-left: 4px solid var(--color-border); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 85%;
+    background: var(--color-code-bg);
+    padding: 3px 6px;
+    border-radius: 6px;
+  }
+  pre { background: var(--color-code-bg); border-radius: 8px; padding: 16px; overflow-x: auto; line-height: 1.45; }
+  pre code { background: transparent; padding: 0; font-size: 13.5px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--color-border); padding: 8px 12px; text-align: left; }
+  th { background: var(--color-code-bg); font-weight: 600; }
+  tr:nth-child(2n) td { background: var(--color-code-bg); }
+  .meta { color: var(--color-muted); font-size: 14px; margin-bottom: 24px; }
+  .tag { display: inline-block; background: var(--color-tag-bg); color: var(--color-link); border-radius: 999px; padding: 2px 12px; font-size: 13px; font-weight: 500; margin-right: 6px; }
+  hr { border: none; border-top: 1px solid var(--color-border); margin: 32px 0; }
+  ul, ol { padding-left: 26px; }
+  li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="repo-bar">
+  <svg height="16" width="16" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.249.249 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+  <span class="repo-name">ai-interview-questions</span>
+  <span class="repo-path">/ 每日推送 / 2026-11-21</span>
+</div>
+<div class="container">
+<div class="meta"><span class="tag">日期：2026-11-21</span><span class="tag">方向：AI Agent · 任务规划与反思机制</span><span class="tag">类型：理论原理 + 系统设计 + 编码实现</span></div>
+<h1 id="ai-2026-11-21">每日 AI 面试题 · 2026-11-21</h1>
+
+<h2 id="fangxiang">【方向】</h2>
+<p>AI Agent — 任务规划与反思机制（Planning &amp; Reflection：ReAct / Plan-and-Execute / ToT 范式选型、长任务防跑偏、动态重规划、Reflexion 经验沉淀，理论原理 + 系统设计 + 编码实现）</p>
+
+<h2 id="timu">【题目及项目背景】</h2>
+<p>某头部券商研究所要打造"深度行业研究报告 Agent"（Research Agent）：分析师输入一句研究需求（如"对比储能与锂电回收两个赛道近三年的格局变化，给出配置建议"），Agent 自主完成检索行业数据、抓取政策原文、跑数据清洗与测算、生成图表、撰写万字报告并校验引用，端到端 30~60 步，单任务耗时 10~40 分钟。技术栈：FastAPI + 自研编排框架（不依赖 LangChain）、DeepSeek/Qwen 系列模型（规划用强模型、执行用轻量模型）、工具包括 Web 检索、数据库查询、Python 沙箱、文档生成。</p>
+<p>第一版实现是<strong>纯 ReAct 单循环</strong>：模型走一步看一步，Thought → Action → Observation 直到认为报告写完。灰度两个月暴露四类典型问题：</p>
+<ol>
+<li><strong>目标漂移（跑偏）</strong>：执行到第 20 步后模型忘记初始研究目标，围绕某个子问题反复检索打转，最终报告缺失关键章节（如漏掉竞争格局），个别任务陷入无效循环烧光 Token 预算；</li>
+<li><strong>前置假设被推翻只能重跑</strong>：任务推进到一半才发现两家公司的营收口径不一致（一个为并表、一个为单表），此前所有测算作废——但系统只会从头执行整个任务，单次浪费数十万 Token；</li>
+<li><strong>无校验的一次性输出</strong>：报告结论与数据对不上（模型在没有证据的情况下编造结论），没有质检环节，分析师返工率高；</li>
+<li><strong>全程串行、延迟爆炸</strong>：明明多个子课题（政策梳理、数据拉取、竞品调研）互相独立可并行，全部串行执行，用户端 P95 等待超 40 分钟。</li>
+</ol>
+<p>面试题：<strong>请给出该 Research Agent 的规划与反思体系完整设计方案，重点阐述：① ReAct / Plan-and-Execute / Reflection / ToT 四种范式的原理、优缺点与选型，以及本案例应该采用什么混合策略；② 任务拆解的方法论（目标层/子任务层/能力映射层、粒度判据、DAG 依赖与并行）；③ 动态重规划的触发条件、计划状态管理与"局部重排而非全量重跑"如何落地；④ 反思机制设计：触发时机、证据驱动反馈、Reflexion 与一次性自检的区别、如何防"为改而改"并沉淀可复用经验；⑤ 手写 Planner-Executor-Reflector 核心执行循环代码。</strong></p>
+
+<h2 id="daan">【答案详解】</h2>
+
+<h3 id="yi">一、原理讲解：四种范式对比与混合策略——先选对流程，再谈调优</h3>
+<p>Agent 规划的本质是<strong>把"想清楚"和"做出来"在时间轴上如何分配</strong>。四种主流范式回答的是不同问题：</p>
+<table>
+<thead>
+<tr><th>范式</th><th>核心机制</th><th>优点</th><th>缺点</th><th>适用场景</th></tr>
+</thead>
+<tbody>
+<tr><td>ReAct</td><td>Thought → Action → Observation 循环，边想边做</td><td>灵活、实现简单、工具结果能改变下一步</td><td>无全局视野，长任务易跑偏/忘目标/无效循环</td><td>路径不确定的短链路探索任务</td></tr>
+<tr><td>Plan-and-Execute</td><td>Planner 先输出完整计划，Executor 按计划逐步执行</td><td>全局可控、长任务不跑偏、可并行、省 Token</td><td>初始计划出错不可逆，遇计划外突发易卡壳</td><td>步骤较稳定、依赖明确的长周期任务</td></tr>
+<tr><td>Reflection</td><td>Generate → Critique → Refine 闭环，初稿后增加检验修订环节</td><td>大幅降幻觉、提质量（HumanEval 上 GPT-4 直接生成 80%，叠加 Reflexion 升至 91%）</td><td>每轮反思新增 1~3 次模型调用，Token 与延迟翻倍</td><td>低容错高严谨场景：代码、报告、金融分析</td></tr>
+<tr><td>ToT（思维树）</td><td>分叉点同时展开多条候选路径，评估器打分、可回溯</td><td>能探索多解、适合博弈/推导</td><td>成本与复杂度最高</td><td>数学推导、复杂代码生成、逻辑博弈</td></tr>
+</tbody>
+</table>
+<p>三条必答的原理认知：</p>
+<ol>
+<li><strong>Reflection 的本质是上下文压缩</strong>：LLM 没有真正的记忆，每次调用都从零开始。反思机制把上一轮学到的教训压缩成高密度"经验"文本，塞进下一轮上下文——相当于给 Agent 一个错题本。Reflexion 与"简单自检"的区别在于：一般的 Reflection 只是一次输出自检，Reflexion 强调<strong>经验在多次尝试之间被保留和复用</strong>（用文字化经验替代梯度更新），并且反思内容必须是结构化的"错误证据 + 可能原因 + 下次动作 + 适用范围"，而不是泛泛要求"更认真"。</li>
+<li><strong>规划与执行解耦是可靠性工程的第一原则</strong>（InfoQ Agentic AI 架构系列反复强调）：非确定性的模型负责提出计划，确定性的软件框架负责执行、校验与状态管理——把不可预测的部分隔离在"提出建议"的环节。模型输出必须当作不可信输入，计划 JSON 要做 Schema 校验、节点白名单过滤后才能驱动执行器。</li>
+<li><strong>选型的核心原则是"不为不需要的能力买单"</strong>：Anthropic《Building Effective Agents》主张从最简单可行的 workflow 起步；简单问答用 ReAct 就够，叠加 Reflection 反而增加延迟与成本，只有明确遇到"质量不够"问题才升级范式。</li>
+</ol>
+<p><strong>本案例的混合策略（工业标准答案）</strong>：外层 Plan-and-Execute（强模型 Planner 一次性拆解研究大纲，防长任务跑偏、支持子课题并行）→ 内层单步用 ReAct（每个子课题内部边检索边调整，保持灵活性）→ 关键节点叠加 Reflection（报告成稿后数据核对、引用校验、章节完整性验收）。一句话：<strong>Plan 控全局、ReAct 做执行、Reflection 保质量</strong>。</p>
+
+<h3 id="er">二、任务拆解方法论：三层拆解 + 粒度三条判据</h3>
+<p>面试高频陷阱是回答"拆成几个步骤写 prompt"——这不算拆解。真正的任务拆解分三层：</p>
+<table>
+<thead>
+<tr><th>层次</th><th>内容</th><th>示例（研究报告任务）</th></tr>
+</thead>
+<tbody>
+<tr><td>目标层（Goal）</td><td>不是"做什么"，而是"做到什么程度算完成"——可验收的完成判据</td><td>❌"分析储能赛道" ✅"输出含市场规模测算、竞争格局、政策梳理、配置建议四章，每个结论有数据引用"</td></tr>
+<tr><td>子任务层（Subtasks）</td><td>拆成可执行单元，明确依赖关系形成 DAG</td><td>政策检索 → 数据拉取 → 口径核对 → 测算 → 撰写 → 审校；其中政策/数据/竞品三支可并行</td></tr>
+<tr><td>能力映射层（Tools/Skills）</td><td>每个子任务映射到具体能力（工具/API/模型）</td><td>数据获取→SQL 工具；测算→Python 沙箱；撰写→强模型；审校→Reflection 环节</td></tr>
+</tbody>
+</table>
+<p><strong>粒度判据（比"适中就好"值钱的具体标准，三条全满足才算拆对了）</strong>：</p>
+<ol>
+<li>这一步能否<strong>独立验证</strong>结果（做完能检查"行数列数对不对"，而不是说不清何时算完成的"处理数据"）；</li>
+<li>这一步失败后能否<strong>独立重试</strong>（不用连带前面的步骤一起重跑）；</li>
+<li>这一步的产出能否被<strong>后续步骤直接消费</strong>。</li>
+</ol>
+<p>规划粒度的锚点是"<strong>可验证的中间产物</strong>"：每一步都有一个明确的、可检查的产出。太粗的规划等于没做（每步内部还是黑盒），太细的计划比任务还长且一步失败全盘皆废。</p>
+<p><strong>防幻觉规划</strong>：让模型输出<strong>受约束的计划 JSON</strong>（子任务列表 + 依赖边 + 每步验收判据 + 工具白名单），执行器只接受 Schema 合法且节点在白名单内的计划；关键流程（合规校验、发款类动作）固化在代码里，不交给模型自由发挥。评价规划质量的指标：任务完成率、无效步骤数、重规划次数与耗时——不是计划文字写得是否详尽。</p>
+
+<h3 id="san">三、动态重规划：触发条件、计划状态管理与局部重排</h3>
+<p>第一版方案"前置假设被推翻只能从头重跑"的病根，是把计划当成了死文档。正确的心理模型不是"规划然后执行"，而是<strong>"规划一个足够好的起点，然后在执行中持续修正"</strong>——Agent 每一步都会拿到规划时不存在的新信息。</p>
+<p><strong>重规划的四类触发条件</strong>：</p>
+<ol>
+<li>步骤执行<strong>失败</strong>（工具报错、连续重试不通过）；</li>
+<li><strong>关键事实推翻前置假设</strong>（本案例的口径不一致：发现"两家公司营收口径不同"，意味着所有依赖该假设的已产出结论失效）；</li>
+<li><strong>目标/需求变化</strong>（用户中途追加要求）；</li>
+<li><strong>环境变化</strong>（检索到新政策使既有结论过时）。</li>
+</ol>
+<p><strong>计划状态管理（重规划能落地的前提）</strong>：任务状态需记录每个步骤的<strong>版本、输入依据、产物、重试次数与结束原因</strong>。规划器维护的是一份"活计划"：</p>
+<ul>
+<li>已完成步骤记录其产物与所依赖的假设清单；</li>
+<li>假设被推翻时，沿依赖边（DAG）定位所有受影响的下游步骤，<strong>只重排受影响的剩余分支，已验证的前序产物直接复用</strong>——这就是"局部重排而非全量重跑"，直接把本案例的数十万 Token 浪费降下来；</li>
+<li>重规划次数设上限（如 3 次），重复失败转澄清、降级或人工，防止"重规划循环"本身成为新的死循环；</li>
+<li>世界变化后不能沿旧计划提交：如确认环节之后库存已变，必须重新查询并请求确认新方案。</li>
+</ul>
+
+<h3 id="si">四、反思机制设计：证据驱动、防"为改而改"、经验沉淀</h3>
+<p><strong>触发时机</strong>（宁可少而准）：测试/校验失败之后、工具异常之后、关键阶段完成之后、最终答案验收失败之后。反思是正式运行时范式而非调试辅助，每次反思都有真实的 Token 与延迟代价。</p>
+<p><strong>证据驱动的反馈源优先级</strong>：优先用<strong>测试、业务回执、可核查证据</strong>作为反思输入（如"Python 沙箱断言失败：结论段落引用的增速 23% 与数据表计算的 15% 不符"），而不是让模型自己评自己——自评模型可能强化错误解释。反思输出必须是结构化四元组：<strong>错误证据 + 可能原因 + 下次动作 + 适用范围</strong>。</p>
+<p><strong>防"为改而改"（面试必答的追问点）</strong>：</p>
+<ol>
+<li><strong>PASS 退出机制</strong>：审阅环节输出 PASS / FAIL 二值判定，PASS 即终止反思循环——没有新证据时反复改写同一答案不能带来可靠提升；</li>
+<li><strong>硬性 max 轮次</strong>（反思轮次上限，通常 2~3 轮）；</li>
+<li><strong>对照基线验证价值</strong>：限制次数、对照无反思基线，确认反思真的在提升而不是在波动。</li>
+</ol>
+<p><strong>经验沉淀（Reflexion 精髓）</strong>：反思产出不是用完即弃，而是写入经验库（按任务类型索引），下次同类任务的 Planner 注入"历史失败模式"（如"该公司口径数据先核对是否并表"）。经验要允许过期或撤回（衔接记忆治理：过期/降权/删除语义不同）。注意：反思本身也增加成本，简单任务不值得；衡量反思体系用完整任务成功率、错误副作用与成本，不能只看反思文字是否漂亮。</p>
+
+<h3 id="wu">五、编码实现：Planner-Executor-Reflector 核心执行循环</h3>
+<pre><code>import asyncio, json
+from dataclasses import dataclass, field
+
+@dataclass
+class Task:
+    id: str
+    goal: str                      # 子任务目标（含完成判据）
+    deps: list = field(default_factory=list)   # 依赖的前置任务 id（DAG 边）
+    tool: str = "llm"              # 能力映射：检索/SQL/沙箱/文档/llm
+    status: str = "pending"        # pending/running/done/failed/blocked
+    result: str = ""
+    retries: int = 0
+    assumptions: list = field(default_factory=list)  # 本步依赖的前置假设
+
+class PlanExecuteReflectAgent:
+    """外层 Plan-and-Execute + 内层单步灵活 + 关键节点 Reflection。
+    核心：受约束计划 JSON、DAG 拓扑并行、假设失效局部重排、
+    证据驱动反思、PASS 退出 + 轮次上限 + 重规划预算。"""
+
+    def __init__(self, llm_planner, llm_executor, tools, max_replan=3, max_reflect=3):
+        self.planner, self.executor, self.tools = llm_planner, llm_executor, tools
+        self.max_replan, self.max_reflect = max_replan, max_reflect
+        self.lessons: list[str] = []   # Reflexion 经验库（跨尝试保留，按任务类型索引）
+
+    async def run(self, user_goal: str) -&gt; str:
+        for replan in range(self.max_replan + 1):
+            plan = await self._make_plan(user_goal)          # ① 受约束规划
+            for round_ in range(self.max_reflect + 1):       # ② 反思轮次上限
+                ok, evidence = await self._execute_dag(plan) # ③ 拓扑并行执行
+                if ok:
+                    return await self._final_review(plan, evidence)  # ④ 验收
+                verdict = await self._reflect(plan, evidence)  # ⑤ 证据驱动反思
+                if verdict["decision"] == "PASS":              # PASS 退出，防为改而改
+                    return evidence
+                if verdict["decision"] == "REVISE_PLAN":
+                    self.lessons.append(verdict["lesson"])     # 经验沉淀
+                    user_goal += f"\n[历史教训] {verdict['lesson']}"
+                    break                                      # 跳出反思轮 → 重规划
+                # decision == PATCH：仅修补当前输出，带着反馈重跑本轮
+        return "已达重规划上限，输出当前进展与未解决问题清单，转人工处理。"
+
+    async def _make_plan(self, goal: str):
+        lessons = "\n".join(f"- {x}" for x in self.lessons[-5:])  # 注入历史失败模式
+        raw = await self.planner(
+            f"将目标拆解为子任务 JSON 列表：[{{id,goal,deps,tool,assumptions}}]。\n"
+            f"要求：每步有可验证的完成判据；独立子任务不设依赖以便并行；"
+            f"tool 只能取 {list(self.tools)}。\n历史教训：\n{lessons}\n目标：{goal}")
+        tasks = [Task(**t) for t in json.loads(raw)
+                 if t["tool"] in self.tools]        # 白名单过滤，拒收越权节点
+        return tasks
+
+    async def _execute_dag(self, plan: list[Task]):
+        evidence, by_id = {}, {t.id: t for t in plan}
+        done = set()
+        while len(done) &lt; len(plan):
+            ready = [t for t in plan if t.id not in done
+                     and all(d in done for d in t.deps)]
+            if not ready:
+                return False, "存在不可满足的依赖环或失败前置，无法继续"
+            results = await asyncio.gather(*[self._run_step(t, evidence) for t in ready])
+            for t, (ok, out) in zip(ready, results):
+                if not ok:
+                    return False, f"步骤 {t.id}({t.goal}) 失败: {out}"
+                by_id[t.id].status, evidence[t.id] = "done", out
+                done.add(t.id)
+        return True, json.dumps(evidence, ensure_ascii=False)
+
+    async def _run_step(self, t: Task, evidence: dict):
+        ctx = "\n".join(evidence[d] for d in t.deps)       # 只喂依赖步骤的产物
+        try:
+            out = await self.executor(f"任务: {t.goal}\n判据: 见目标\n上下文:\n{ctx}")
+            return True, out[:2000]                        # 产物截断，防上下文膨胀
+        except Exception as e:
+            return False, f"{type(e).__name__}: {e}"       # 错误即证据，不吞异常
+
+    async def _reflect(self, plan: list[Task], evidence: str):
+        resp = await self.planner(
+            "对照以下证据做审阅，输出 JSON {decision, lesson}。\n"
+            "decision 取值: PASS(证据充分) / PATCH(小瑕疵附修正意见) / "
+            "REVISE_PLAN(前置假设被推翻或结构缺失，需调整计划)。\n"
+            "lesson 必须是『错误证据+原因+下次动作+适用范围』四元组。\n"
+            f"证据：{evidence[:6000]}")
+        return json.loads(resp)
+
+    async def _final_review(self, plan: list[Task], evidence: str) -&gt; str:
+        # 终审：结论必须逐条可追溯到证据 id，否则拒收（回应背景问题 3 的幻觉结论）
+        return await self.planner(f"基于证据撰写最终报告，每个结论标注证据编号，"
+                                  f"无证据支撑的观点必须删除。\n证据：{evidence[:8000]}")
+</code></pre>
+<p><strong>代码讲解（面试官追问点）</strong>：① <code>_make_plan</code> 强制受约束 JSON + 工具白名单过滤，并把历史教训注入 Planner——体现"模型提议、代码把关"与 Reflexion 经验复用；② <code>_execute_dag</code> 按依赖拓扑分波次执行，波内 <code>asyncio.gather</code> 并行——独立子课题（政策/数据/竞品）并发跑，直接回应背景问题 4 的串行延迟；③ 步骤失败立即返回结构化证据（步骤 id + 失败原因），由上层决定重试/重规划，执行器本身不做静默重试；④ <code>_reflect</code> 三值决策（PASS/PATCH/REVISE_PLAN）+ max_reflect 轮次上限防"为改而改"，REVISE_PLAN 才触发重规划、PATCH 只修补当前输出——避免小瑕疵也推倒重来；⑤ 重规划由 <code>max_replan</code> 兜底，超限输出进展清单转人工——防止"重规划循环"成为新死循环；⑥ 局部重排的要点在 Task 的 <code>assumptions</code> 与 deps：假设被推翻时沿依赖边定位受影响分支重排、已验证产物（<code>evidence</code>）复用，本示例为可读性做了简化，生产中需把"假设失效 → 下游失效"做成 DAG 反向传播；⑦ 每步产物截断 + 只喂依赖步骤的产物，控制长任务的上下文体积；⑧ 可观测：每轮记录计划版本、步骤耗时、Token、反思决策，支持整任务回放定位"哪一步开始跑偏"。</p>
+<p><strong>答题点睛</strong>：一段话收束——"长任务 Agent 的规划体系是三层混合：外层 Plan-and-Execute 用强模型拆出带验收判据的 DAG 计划防跑偏、内层 ReAct 保持单步灵活、关键节点 Reflection 用证据驱动反思保质量；拆解粒度对齐'可独立验证、可独立重试、产出可直接消费'的中间产物；执行中把计划当活文档——步骤版本、输入依据、产物、假设清单全部落状态，假设被推翻就沿 DAG 局部重排复用产物，而不是全量重跑；反思靠 PASS 退出、轮次上限和结构化教训防'为改而改'，教训沉淀成经验库反哺下次规划；最后用完成率、无效步数、重规划次数和 Token 成本衡量这套体系，而不是看计划写得多漂亮。"</p>
+
+<h2 id="laiyuan">【来源平台】</h2>
+<ul>
+<li>牛客网 ·《【三年面试五年】AI Agent 高频工程面试 80 问分享（含完整答案，持续更新！）》——规划器输出可检查子目标与依赖、固定计划 vs 逐步 ReAct 的组合（全局计划+局部行动循环）、Reflexion 与一次性自检的区别、反思触发节点（测试失败/工具异常/关键阶段完成/验收失败）、反思四元组（错误证据+原因+下次动作+适用范围）、证据优先用测试与回执、限制次数对照基线、重规划次数上限与转澄清降级人工、CoT 与 ToT 区别：<a href="https://m.nowcoder.com/discuss/1739191">https://m.nowcoder.com/discuss/1739191</a></li>
+<li>牛客网 ·《面试被问到"Agent"的那一刻，其实很容易露馅。》——任务拆解三层（目标层"做到什么程度算完成"/子任务层/能力映射层）、Planner-Executor-Reflector 三件套、设计数分 Agent 高频题（Reflection 机制避免一次性结论错误、限制工具调用次数、防 hallucination）：<a href="https://www.nowcoder.com/feed/main/detail/38a1eeddcf9049d382a659e969e19e40">https://www.nowcoder.com/feed/main/detail/38a1eeddcf9049d382a659e969e19e40</a></li>
+<li>牛客竞赛 ·《Agent 面经汇总（含答题思路）》——Agent 核心组件（Planner + Executor + Reflection）、规划能力实现（显式规划 vs 边想边做、ReAct/Plan-and-Execute/ToT）、复杂任务先 plan 后 reflection、工具调用失败处理与 max_retry：<a href="https://ac.nowcoder.com/discuss/1647729">https://ac.nowcoder.com/discuss/1647729</a></li>
+<li>牛客网 ·《AI Agent 面试高频 100 问》——ReAct 与 Plan-and-Execute 怎么选（先规划再单步内 ReAct + 计划校验与重规划入口）、Reflection Agent 什么时候值得加（代码生成/报告生成/故障分析）、Planning 由框架还是大模型做（模型输出受约束计划 JSON、执行器只接受白名单节点）、Planning 实现方式与评价指标（完成率、无效步骤数、重规划次数）：<a href="https://www.nowcoder.com/discuss/922460251717128192">https://www.nowcoder.com/discuss/922460251717128192</a></li>
+<li>掘金 ·《Agent 经典面试题：Agent 的核心流程是什么？规划、行动、观察和反思分别做什么？》——四阶段循环基础版与加分版答案、反思机制本质是上下文压缩（经验压缩塞进下一轮上下文）、ReAct/Plan-and-Execute/Reflection/Multi-Agent 按场景选范式（"根据路况选车"）、慢思考时间换质量：<a href="https://juejin.cn/post/7667907789687603209">https://juejin.cn/post/7667907789687603209</a></li>
+<li>掘金 ·《2026 年最新 AI agent 面试（01）Agent 基础与推理范式》——ReAct 的 Prompt 结构与代码驱动 loop、Plan-and-Execute 规划执行解耦（强模型规划+轻量执行、全局可控可并行）、Reflection 生成-评估-改进闭环与叠加层级、快手踩坑点（只死磕 Prompt 不够）、防 Reflection 死循环追问（硬性 max_steps + PASS 退出机制）、Anthropic 最简单可行 workflow：<a href="https://juejin.cn/post/7662570924793282603">https://juejin.cn/post/7662570924793282603</a></li>
+<li>掘金 ·《第 5 篇：三种思考模式——ReAct / Plan-and-Execute / Reflection》——Reflection 的 Generate→Critique→Refine 循环、Self-Reflection/Multi-LLM/Tool-Assisted 三变体、组合模式（Plan 定计划→ReAct 执行→Reflection 验收，"项目经理+团队+QA"类比）、模式选择指南与"不要为不需要的能力买单"：<a href="https://www.juejin.cn/post/7662678862339178530">https://www.juejin.cn/post/7662678862339178530</a></li>
+<li>掘金 AI 编程 ·《面试官：你的 Agent 怎么不跑飞？我：4 道防线》——ReAct vs Plan-and-Execute 选型（边想边干 vs 先想后干）、防循环三招（最大轮次硬上限、主动 finish 信号、工具失败重试 1 次降级）、生产级混用（大步骤 Plan、子步骤 ReAct）：<a href="https://aicoding.juejin.cn/post/7681097995387092998">https://aicoding.juejin.cn/post/7681097995387092998</a></li>
+<li>CSDN 博客 ·《一文读懂 Agent 三大核心设计范式：ReAct / Plan-and-Execute / Reflection》——反思四步闭环（任务生成/结果评估/反思总结/迭代重试）、HumanEval 基准 GPT-4 直接生成 80% 叠加 Reflexion 升至 91%、反思成本（每轮新增 1~3 次调用、Token 翻倍）、三大范式参数对比表、工业标准组合用法（基础通用版/高质量专业版）、高频易错点（Reflection 是正式运行时范式、三者分层互补组合使用）：<a href="https://blog.csdn.net/xx_nm98/article/details/164230169">https://blog.csdn.net/xx_nm98/article/details/164230169</a></li>
+<li>CSDN 博客 ·《Agent 面试题答案整理（一）》——任务拆解方法（CoT/ToT/工具辅助拆解、子目标可验证/依赖清晰/粒度适中/留调整余地）、反思机制亮点表述、目标拆解 vs 任务分解的区别、多 Agent 任务分配与粒度权衡：<a href="https://blog.csdn.net/qq_36729037/article/details/163675288">https://blog.csdn.net/qq_36729037/article/details/163675288</a></li>
+<li>CSDN 博客 ·《Agent 面试题（大模型 Agent，含基础、原理、工程、业务、八股 + 真实面试问答）》——Reflection 反思机制定义、Plan-and-Execute 范式与"计划错了后续全错"缺点、生产可靠性（最大迭代轮次/输出校验/异常捕获/guardrail/链路日志/超时控制）、Agentic RAG 与普通 RAG 区别：<a href="https://blog.csdn.net/weixin_48309090/article/details/163974649">https://blog.csdn.net/weixin_48309090/article/details/163974649</a></li>
+<li>CSDN 博客 ·《Agent 大厂面试题｜字节跳动淘汰 85% 候选人的 AI 综合面，Agent 全链路连环追问附满分作答》——Agent 五大核心能力（感知理解/任务规划/工具调用/记忆管理/反思纠错）、任务规划满分答案（拆解为可执行细分步骤）、反思满分答案（校验执行结果、排查工具调用错误、失败重试与策略迭代）：<a href="https://blog.csdn.net/m0_59164520/article/details/163086379">https://blog.csdn.net/m0_59164520/article/details/163086379</a></li>
+<li>面试鸭 ·《Agent 的标准执行循环（Agent Loop）包含哪些关键阶段？各阶段的核心职责是什么？》——六阶段循环（感知/推理规划/行动/观察/评估反思/终止输出）、规划阶段调用 CoT/ReAct/Plan-and-Execute 范式、反思阶段对照初始目标检查完成度与质量门禁、发现偏差回到推理修正闭环：<a href="https://www.mianshiya.com/commentAll/2082027810217558017">https://www.mianshiya.com/commentAll/2082027810217558017</a></li>
+<li>CodeFun2000 ·《第 1 题-智能退款审核服务》——AI 辅助开发实战中的"重 Plan 轻 Coding"方法论（先规划 10 个缺一不可的阶段再动手、机械化分条执行、每步 React 反思调优、证据驱动"测试→报错→找证据→修复"循环）——印证规划与反思在工程实战中的权重：<a href="https://codefun2000.com/new-p/P5388">https://codefun2000.com/new-p/P5388</a></li>
+<li>InfoQ ·《AI 驱动的智能异常处置：从异常发现到根因定位》——生产级 Agent 的混合编排策略（固定工作流 + 自主编排结合）、任务分解采用 ReAct 框架作为 baseline、记忆增强与反思机制提升编排可靠性、多计划选择与外部规划器：<a href="https://www.infoq.cn/article/Mv7SsDMyFBDz3coYwTUx">https://www.infoq.cn/article/Mv7SsDMyFBDz3coYwTUx</a></li>
+<li>InfoQ ·《AI 智能体 8 层架构：生产级系统构建指南》——规划层决定"如何实现目标"而非"下一步做什么"、分层任务网络 HTN 递归分解、多计划生成与评估（3~5 个带权衡方案 + 评论家打分 + 高风险人工批准）、重新规划与恢复（执行报告进度、检测偏差动态调整）、计划批准日志与干运行模拟、LangGraph 分层智能体（LLM 规划器分解任务委托执行器）：<a href="https://www.infoq.cn/article/12678390ea8efb705b7b4956a">https://www.infoq.cn/article/12678390ea8efb705b7b4956a</a></li>
+</ul>
+</div>
+</body>
+</html>

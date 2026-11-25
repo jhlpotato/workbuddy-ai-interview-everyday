@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日 AI 面试题 · 2026-11-20 · AI Agent RAG 检索增强系统设计</title>
+<style>
+  :root {
+    --color-fg: #1f2328;
+    --color-muted: #59636e;
+    --color-link: #0969da;
+    --color-border: #d1d9e0;
+    --color-bg: #ffffff;
+    --color-code-bg: #f6f8fa;
+    --color-header-bg: #24292f;
+    --color-tag-bg: #ddf4ff;
+    --color-quote: #59636e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: var(--color-link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  /* 顶部深色仓库条 */
+  .repo-bar {
+    background: var(--color-header-bg);
+    color: #ffffff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .repo-bar .repo-name { font-weight: 600; font-size: 15px; }
+  .repo-bar .repo-path { color: #b7bdc7; }
+  .repo-bar svg { fill: #ffffff; vertical-align: text-bottom; }
+  .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 28px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin: 0 0 20px; }
+  h2 { font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 8px; margin: 36px 0 16px; }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; }
+  p { margin: 12px 0; }
+  blockquote { margin: 12px 0; padding: 0 16px; color: var(--color-quote); border-left: 4px solid var(--color-border); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 85%;
+    background: var(--color-code-bg);
+    padding: 3px 6px;
+    border-radius: 6px;
+  }
+  pre { background: var(--color-code-bg); border-radius: 8px; padding: 16px; overflow-x: auto; line-height: 1.45; }
+  pre code { background: transparent; padding: 0; font-size: 13.5px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--color-border); padding: 8px 12px; text-align: left; }
+  th { background: var(--color-code-bg); font-weight: 600; }
+  tr:nth-child(2n) td { background: var(--color-code-bg); }
+  .meta { color: var(--color-muted); font-size: 14px; margin-bottom: 24px; }
+  .tag { display: inline-block; background: var(--color-tag-bg); color: var(--color-link); border-radius: 999px; padding: 2px 12px; font-size: 13px; font-weight: 500; margin-right: 6px; }
+  hr { border: none; border-top: 1px solid var(--color-border); margin: 32px 0; }
+  ul, ol { padding-left: 26px; }
+  li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="repo-bar">
+  <svg height="16" width="16" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.249.249 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+  <span class="repo-name">ai-interview-questions</span>
+  <span class="repo-path">/ 每日推送 / 2026-11-20</span>
+</div>
+<div class="container">
+<div class="meta"><span class="tag">日期：2026-11-20</span><span class="tag">方向：AI Agent · RAG 检索增强系统设计</span><span class="tag">类型：系统设计 + 原理 + 编码实现</span></div>
+<h1 id="ai-2026-11-20">每日 AI 面试题 · 2026-11-20</h1>
+
+<h2 id="fangxiang">【方向】</h2>
+<p>AI Agent — RAG 检索增强系统设计（分层归因方法论 + 混合检索与两阶段重排 + GraphRAG 适用边界 + 评测体系，系统设计为主、穿插编码实现）</p>
+
+<h2 id="timu">【题目及项目背景】</h2>
+<p>某持牌保险科技公司为其客服团队（约 1200 人坐席）与 App 端用户构建"理赔智能问答 + 产品条款助手"。知识库包括：产品条款 PDF（含大量费率表与免责条款表格）、理赔操作指引、监管合规文档、约 20 万条历史工单，切分后索引规模约 80 万条。技术栈：FastAPI + Milvus 向量库 + Elasticsearch + Qwen 系列模型。</p>
+<p>第一版实现采用最朴素的方案：<strong>512 token 固定长度切分 + 单一向量检索 Top-10 直接注入 system prompt</strong>。上线一个月后暴露四类典型问题：</p>
+<ol>
+<li><strong>精确查询失效</strong>：用户问"条款编号 HB-2024-117 的等待期是多少天"这类带精确编号、产品代码、日期的问题，向量检索召回的片段答非所问——语义相近但关键词不对；</li>
+<li><strong>多跳问题准确率暴跌</strong>：内部测试显示简单事实查询准确率约 90%，但"哪些通过了新增核保规则的产品，其经纪人还能拿到续期佣金"这类跨文档、多跳推理的问题准确率掉到 40% 以下，相关信息分散在条款、规则变更公告、佣金制度三份文档里，模型强行编造因果链；</li>
+<li><strong>有引用仍答错</strong>：答案带了引用编号，但把两个条款片段错误拼接（如把 A 产品的免责期拼到 B 产品头上），坐席照抄答复引发客诉；</li>
+<li><strong>调优无从下手</strong>：团队效果不好就换 embedding 模型、答错就换大模型，反复试错却没有归因方法，改动常常"按下葫芦浮起瓢"——修好了检索、生成又开始幻觉。</li>
+</ol>
+<p>面试题：<strong>请给出该 RAG 系统的完整设计方案，重点阐述：① "答错了"如何分层归因（检索层/上下文构造层/生成层），每层对应的独立评测指标是什么；② 切分与索引策略（结构化切分、small-to-big 父子切片、元数据治理）如何设计；③ 混合检索（Dense + BM25 + RRF）与两阶段重排为何是标准答案，如何落地；④ GraphRAG 的适用边界与落地成本，什么时候不该上图谱；⑤ 手写混合检索 + RRF 融合 + 宽召回窄重排的核心检索管线代码。</strong></p>
+
+<h2 id="daan">【答案详解】</h2>
+
+<h3 id="yi">一、原理讲解：检索质量是天花板，归因是方法论——先分层，再调优</h3>
+<p>RAG 是一条<strong>串联流水线</strong>（解析 → 切分 → 索引 → 召回 → 重排 → 组装 → 生成），任何一环挂了，用户看到的都只是同一个"答错了"。第一版方案的病根不在某个组件，而在<strong>没有归因能力</strong>：Recall@10 只有 60% 的时候，换 prompt、换生成模型、加 rerank 都是"给漏水的桶刷漆"。因此面试的第一个得分点不是背组件清单，而是能当场把"答错了"拆回具体某一层：</p>
+<table>
+<thead>
+<tr><th>症状</th><th>大概率故障层</th><th>如何确认</th></tr>
+</thead>
+<tbody>
+<tr><td>答错且引用的片段与问题无关</td><td>检索层</td><td>回放 trace 查看召回片段，正确片段根本不在 Top-K</td></tr>
+<tr><td>正确片段已召回，答案仍错</td><td>上下文构造层 / 生成层</td><td>检查片段在 prompt 中的位置与截断（Lost in the Middle：中间位置内容被忽略），再用同一上下文收紧指令测试</td></tr>
+<tr><td>常见问法正确、编号/代码查询失败</td><td>词法缺口</td><td>对比纯向量与混合检索在编号类问题集上的表现</td></tr>
+<tr><td>答案内容过时</td><td>索引新鲜度</td><td>对比索引时间戳与文档最后修改时间</td></tr>
+<tr><td>用户看到无权查看的内容</td><td>权限</td><td>确认权限是否做在<strong>查询期预过滤</strong>——检索后过滤会导致先召回再剔除，可能掏空结果集甚至越权泄露</td></tr>
+</tbody>
+</table>
+<p><strong>归因的前提是分层指标，分层指标的前提是标注了标准片段的评测集</strong>（用线上真实 query 分布采样，不要自己编问题——自己编的和线上分布脱节，调出来的参数是自嗨）：</p>
+<table>
+<thead>
+<tr><th>层次</th><th>指标</th><th>含义</th></tr>
+</thead>
+<tbody>
+<tr><td>检索层</td><td>Recall@k、MRR、NDCG</td><td>该答的问题里，正确片段是否被召回、排多前。RAG 场景优先看 Recall@k</td></tr>
+<tr><td>生成层</td><td>Faithfulness（忠实度）、Answer Relevance</td><td>每个论断是否被检索上下文支撑、答案是否切题</td></tr>
+<tr><td>端到端</td><td>正确率、引用正确率、拒答率</td><td>引用是否存在 ≠ 引用是否蕴含答案（直接回应背景问题 3）</td></tr>
+</tbody>
+</table>
+<p>自动评分可用 RAGAS 等框架 + LLM-as-a-Judge，但 judge 有自身偏差，必须抽样与人工标注对齐校准；指标接入 CI，切分或 embedding 的任何改动不得静默回归。<strong>核心论断：检索质量封顶了整个系统</strong>——正确片段都没进上下文，后面的模型再强也无能为力，所以优化预算大头应投在检索层。</p>
+
+<h3 id="er">二、切分与索引：按结构切，而不是按字数切</h3>
+<ol>
+<li><strong>拒绝全局单一 chunk size</strong>：固定 512 token 切分会把"免责条款"和它引用的"等待期定义"切到两块，表格被拦腰截断。正确做法是<strong>结构感知切分</strong>：按标题/章节/条款边界切，代码按函数、表格按行组、合同按条款；把文档标题与章节路径随 chunk 一起存储——这往往比反复调 chunk 大小收益更大。</li>
+<li><strong>起点参数</strong>：chunk 512~1024 token、overlap 10%~20%，最终靠固定问题集实验定（对比不同切法的 Recall@k、答案正确率、token 成本），而不是拍脑袋。</li>
+<li><strong>Small-to-Big（父子切片）</strong>：检索用小块（定位准），生成时装载其父块/章节（上下文全）——把"检索粒度"和"生成粒度"解耦，是精确召回与完整上下文冲突的标准解法。</li>
+<li><strong>元数据治理</strong>：每个 chunk 必须带 doc_id、span（章节路径）、版本、生效时间、权限标签。背景里"过时条款被召回""坐席看到不该看的合规文档"两类隐患都靠它在查询期硬过滤解决。另注意：更换 embedding 模型意味着全量重索引，选型时要评估维度、领域匹配度与迁移成本——这是一个有运维代价的决定，不是"效果不好就换"的免死金牌。</li>
+</ol>
+
+<h3 id="san">三、混合检索与两阶段重排：把"找得全"和"找得准"拆开</h3>
+<p>纯向量检索的盲区是<strong>精确符号</strong>：条款编号、产品代码、错误码、日期、生僻专名——embedding 会把它们"语义模糊化"。而 BM25 恰好相反：对精确词法极敏感、对同义改写无能为力。两者互补，融合方式用 <strong>RRF（Reciprocal Rank Fusion）</strong>：<code>score(d) = Σ 1/(k + rank)</code>，k 取 60 的经验值压制单路头部效应，让"两路都命中"的文档胜出；加权 RRF 的权重要在评测集上调，没有评测集的手调权重没有依据。</p>
+<p>两阶段架构的标准分工：</p>
+<ul>
+<li><strong>宽召回</strong>：向量 + BM25 各取 Top-20~50，这一步只追求召回率，宁可多捞不能漏掉，反正后面有重排兜底；</li>
+<li><strong>窄重排</strong>：Cross-Encoder 重排器（如 BGE-Reranker）把 query 与每个候选<strong>联合编码</strong>打分，相关性判断远比"双塔向量余弦相似度"精细，精排到 Top-3~5 注入。代价是额外延迟与算力，所以只在候选集上跑、不对全库跑——"买精度，付延迟"，且需要用重排前后 Top-1/Top-3 命中率的实测提升来证明值得开。</li>
+</ul>
+<p>Query 侧三件套：<strong>改写</strong>（指代补全："它的等待期" → "HB-2024-117 的等待期"）、<strong>扩展/HyDE</strong>（同义词扩展、生成假设文档提升召回）、<strong>多跳分解</strong>（把复合问题拆成多个子查询分别检索再合并）。两个常见误区：① rerank 分数是<strong>相关性</strong>不是置信度，不能直接当拒答阈值（只能设一个很低的兜底线拦截"全线无相关证据"）；② Top-K 越大越准是错觉——K 大噪声多且触发 Lost in the Middle，K 值要与 chunk size 联动看：K × 平均 chunk 长度要明显小于可用窗口。</p>
+
+<h3 id="si">四、GraphRAG：多跳问题的补位方案，但先想清楚要不要上</h3>
+<p><strong>为什么纯向量管不了多跳</strong>：向量空间只管"语义相似"，管不到"逻辑关联"。"通过新增核保规则的产品 → 这些产品的经纪人 → 是否拿续期佣金"这条链上没有任何一句话同时包含全部实体，切分后因果链被打断，召回的片段各自正确、组合起来毫无用处。GraphRAG 把知识组织成实体—关系图，检索从"相似度匹配"变成"图遍历"，一次遍历即可串起跨文档的关联证据。</p>
+<p><strong>但图谱构建是流程里最慢、最贵的一步</strong>，四大落地痛点：</p>
+<table>
+<thead>
+<tr><th>痛点</th><th>表现</th><th>治理</th></tr>
+</thead>
+<tbody>
+<tr><td>实体抽取不稳定</td><td>长文本/领域文本漏抽错抽三元组</td><td>领域小样本微调抽取模型 + 校验 Prompt + 小批量先验证再放量</td></tr>
+<tr><td>实体消歧成本高</td><td>领域别名多，自动归一化不准</td><td>领域词典 + 描述向量聚类 + 人工定期审核高频歧义实体</td></tr>
+<tr><td>图检索噪声多</td><td>多跳带出无关实体，上下文冗余</td><td>max_depth 限制遍历深度、关系权重过滤、向量二次过滤</td></tr>
+<tr><td>链路成本高</td><td>抽取/存储/查询开销远超向量 RAG</td><td>冷热分层，简单查询走向量，复杂推理才触发 GraphRAG 链路</td></tr>
+</tbody>
+</table>
+<p><strong>适用边界判据</strong>（面试必须主动说，防止被贴"过度设计"标签）：适合实体关系明确（人/公司/产品/事件/时间线）、需要多跳推理、答案要求可溯源可解释、知识相对稳定的场景；<strong>不适合</strong>单点事实问答、知识高频变更、快速原型验证。落地路径永远是：先传统 RAG 跑通 MVP，用评测集确认多跳问题是真实痛点后再上图谱；schema（实体/关系类型收敛，本例只保留"产品—条款—规则—人员"四类实体三两种关系）先于代码定，图谱 schema 一旦定下来再改非常痛。微软开源 GraphRAG 的局部检索（细粒度实体问题）+ 全局检索（宏观总结类问题）双模式是企业落地的参考范本。</p>
+
+<h3 id="wu">五、编码实现：混合检索 + RRF 融合 + 宽召回窄重排核心管线</h3>
+<pre><code>import re
+
+def rrf_fuse(rankings: list, k: int = 60, top_n: int = 20) -&gt; list:
+    """Reciprocal Rank Fusion：融合多路召回结果。
+    rankings: 每路一个按相关性降序的 doc_id 列表。
+    k=60 为论文与工程实践的经验值，压制单路头部效应，让两路共同命中的文档胜出。"""
+    score = {}
+    for ranking in rankings:
+        for r, doc_id in enumerate(ranking, start=1):
+            score[doc_id] = score.get(doc_id, 0.0) + 1.0 / (k + r)
+    return [d for d, _ in sorted(score.items(), key=lambda x: -x[1])[:top_n]]
+
+class RetrievalPipeline:
+    """生产检索管线：改写 -&gt; 查询期硬过滤 -&gt; 宽召回(Dense+BM25) -&gt; RRF 融合
+    -&gt; 父块装载 -&gt; Cross-Encoder 精排 -&gt; 带引用预算组装。
+    归因前提：每一步的输入输出记录 trace，答错时可逐层回放定位。"""
+
+    def __init__(self, dense, sparse, reranker, store,
+                 recall_k=50, fused_k=20, final_k=5,
+                 budget=4000, min_score=0.15):
+        self.dense, self.sparse, self.reranker = dense, sparse, reranker
+        self.store = store
+        self.recall_k, self.fused_k, self.final_k = recall_k, fused_k, final_k
+        self.budget, self.min_score = budget, min_score
+
+    def retrieve(self, query: str, filters: dict) -&gt; str:
+        q = self._rewrite(query)                     # ① Query 改写：指代补全/编号提取
+        f = self._hard_filters(filters)              # ② 权限/版本/生效期做查询期预过滤
+        dense_ids  = self.dense.search(q, self.recall_k, f)   # ③ 宽召回：向量管语义
+        sparse_ids = self.sparse.search(q, self.recall_k, f)  #    BM25 管编号/专名/日期
+        cand_ids = rrf_fuse([dense_ids, sparse_ids], top_n=self.fused_k)
+        chunks = self.store.load_chunks(cand_ids, with_parent=True)  # ④ 父子切片
+        ranked = self.reranker.rerank(q, chunks)     # ⑤ Cross-Encoder 精排
+        ranked.sort(key=lambda c: -c["score"])
+        if not ranked or ranked[0]["score"] &lt; self.min_score:
+            return "NO_EVIDENCE"                     # ⑥ 兜底：全线无相关证据 → 上游走拒答/转人工
+        return self._assemble(ranked[:self.final_k])
+
+    def _rewrite(self, q: str) -&gt; str:
+        # 指代补全（示意）：把"它/该产品"替换为最近一轮的实体，编号类问题保原词不重写
+        if re.search(r"[A-Z]{2,}-\d{4}-\d+", q):
+            return q
+        return re.sub(r"它|该产品|上述", self.store.last_entity, q)
+
+    def _assemble(self, ranked) -&gt; str:
+        parts, used = [], 0
+        for c in ranked:                             # 带 doc_id/span/版本标签，支持引用溯源
+            if used + len(c["parent_text"]) &gt; self.budget:
+                break                                # Token 预算截断
+            parts.append(f"[{c['doc_id']} §{c['span']} | v{c['version']}] {c['parent_text']}")
+            used += len(c["parent_text"])
+        return "\n\n".join(parts)
+</code></pre>
+<p><strong>代码讲解（面试官追问点）</strong>：① <code>rrf_fuse</code> 是混合检索的灵魂——不依赖两路分数的量纲可比性，只用排名，天然稳健；加权变体的权重必须用评测集调；② <code>_hard_filters</code> 把权限/版本/生效期做成<strong>查询期</strong>过滤（Milvus 表达式过滤），绝不在检索结果上事后过滤——事后过滤会掏空结果集，且已发生越权读取；③ 召回 <code>recall_k=50</code> 只追召回率、融合后 <code>fused_k=20</code> 再精排到 <code>final_k=5</code>，就是"宽召回窄重排"；④ <code>load_chunks(with_parent=True)</code> 体现 small-to-big：检索命中子块，注入父块，生成上下文完整；⑤ <code>NO_EVIDENCE</code> 兜底阈值设得极低，只拦截"根本没有相关证据"的场景并触发拒答/转人工——它不是精细的置信度判断，rerank 分数不能当置信度用；⑥ <code>_assemble</code> 每段带 doc_id/span/版本标签，既支撑引用溯源（回应背景问题 3 的"有引用仍答错"——引用必须校验是否蕴含答案，而不只是存在），又支撑归因回放；⑦ 生产化要点：全链路 trace 落库用于逐层归因；评测集（100~200 条线上真实问题 + 标注标准片段）接入 CI 防回归；语义缓存命中高频改写后的 query；BM25 与向量库的索引同步更新保证一致性。</p>
+<blockquote><p><strong>答题点睛</strong>：一段话收束——"我把 RAG 当一条可分层归因的流水线：先建标注标准片段的评测集，检索层单独算 Recall@k/MRR，生成层算忠实度与引用正确率，答错先看正确片段有没有被召回——没有就是检索问题，切分按文档结构、表格代码不拆、small-to-big 解耦检索与生成粒度、元数据带版本/生效期/权限做查询期硬过滤；召回用向量加 BM25 的混合检索加 RRF 融合，宽召回窄重排买精度付延迟；多跳推理是纯向量的死穴，用 GraphRAG 补位但先验证痛点再上图谱、简单查询不触发图链路；优化一次只改一个变量，留对照组，拒绝'效果不好就换模型'的玄学调参。"</p></blockquote>
+
+<h2 id="laiyuan">【来源平台】</h2>
+<ul>
+<li>牛客网 ·《大模型RAG常见面试问题(附答案)》——RAG 三步骤、多路召回 + 重排序优化技巧、幻觉两大类成因、MRR/命中率/NDCG 检索评测、知识图谱集成增强推理、无效问题准入判别与兜底话术：<a href="https://www.nowcoder.com/feed/main/detail/4366a6c83d1446ee844f4ab8af3fa25c">nowcoder.com/feed/main/detail/4366a6c8</a></li>
+<li>牛客竞赛 ·《AI 开发高频面试题》（程序员小白条）——RAG vs 直接 Prompt 优缺点、RAG 与微调的选型对比与组合方案、余弦相似度与欧氏距离在文本向量检索中的取舍：<a href="https://ac.nowcoder.com/discuss/1658685">ac.nowcoder.com/discuss/1658685</a></li>
+<li>牛客竞赛 ·《鹅厂面试官："你做了三个月 RAG，召回率多少？"腾讯面经超全整理》——召回率评估框架与计算细节、精度/召回率的核心区别与能否只看召回、多模态 RAG 图片向量化检索：<a href="https://ac.nowcoder.com/discuss/1637718">ac.nowcoder.com/discuss/1637718</a></li>
+<li>牛客网 ·《Agent面经》专题合集——RAG 体系考察升级：预处理 PDF/复杂表格解析与语义切分、Query Rewriting（HyDE/意图重写）、混合检索（向量+BM25/全文）、GraphRAG、Rerank 接入与上下文压缩、如何溯源回答源自哪个片段：<a href="https://www.nowcoder.com/creation/subject/bdbbe1dc5f2d4396b09a261d2871ad01">nowcoder.com/creation/subject/bdbbe1dc</a></li>
+<li>掘金 ·《RAG &amp; AI Agent 开发面试题大全》——六种分块策略对比表（固定/句子/段落/滑动窗口/Small-to-Big/语义分块）、Query 扩展与 HyDE、混合检索与 RRF 融合、宽召回 Top-50 精排 Top-5、迭代检索与 FLARE/Self-RAG 变体：<a href="https://juejin.cn/post/7628861022926028826">juejin.cn/post/7628861022926028826</a></li>
+<li>掘金 ·《面试官问：「你们 RAG 效果不好怎么调？」——答「换个 embedding 模型」基本就凉了》——分层归因方法论、Recall@10 是天花板、切片按文档结构、small-to-big 解耦检索与生成尺寸、元数据版本化（版本/生效时间/权限）、lost in the middle、消融实验与单变量对照：<a href="https://juejin.cn/post/7706372431829598217">juejin.cn/post/7706372431829598217</a></li>
+<li>面试鸭 · RAG 检索增强生成面试题题库——文档切割策略、chunk_size/overlap 设置、HNSW vs IVF 索引区别、混合检索实现、元数据过滤提升精度、检索不到相关文档的处理：<a href="https://www.mianshiya.com/bank/1991427961462456322">mianshiya.com/bank/1991427961462456322</a></li>
+<li>面试鸭 ·《RAG 检索中的 Top-K 是什么意思？K 值如何确定？》——两阶段"粗召回+精排"架构、K 值实测方法论（100~200 题对照实验）、RAGAS 评估指标、K 值与 chunk size 联动及成本 ROI、相似度阈值兜底：<a href="https://www.mianshiya.com/history/1909950476402786306/question/1991796740365262849">mianshiya.com/history/…/question/1991796740365262849</a></li>
+<li>CSDN 博客 ·《GraphRAG实战：为什么团队接入后，最慢的不是模型而是图谱构建？》——图遍历检索与 max_depth 防爆炸、传统 RAG vs GraphRAG 对照实验（简单查询反而略低）、业务/配置/环境三类失败原因拆解、适用边界（单文档事实查询不必上图谱）：<a href="https://blog.csdn.net/2601_96285279/article/details/164019821">blog.csdn.net/2601_96285279/article/details/164019821</a></li>
+<li>CSDN 博客 ·《GraphRAG详解：基于图检索增强生成，打通大模型关联推理，落地复杂知识图谱问答》——四大落地痛点（实体抽取不稳定/消歧成本高/检索噪声/链路成本高）与针对性优化、抽取/消歧/检索/成本四维方案、微软 GraphRAG 局部+全局检索双模式、不建议优先使用 GraphRAG 的三类场景：<a href="https://blog.csdn.net/minhuan/article/details/164153881">blog.csdn.net/minhuan/article/details/164153881</a></li>
+<li>CoPilot Interview（国际补充）·《RAG interview questions》——"retrieval problem or generation problem"归因诊断法、Dense/Sparse/Hybrid 选型权衡表、权限在检索期强制执行、RAG vs 微调 vs 长上下文 vs 查数据库的边界：<a href="https://copilotinterview.com/blog/rag-interview-questions">copilotinterview.com/blog/rag-interview-questions</a></li>
+</ul>
+
+</div>
+</body>
+</html>

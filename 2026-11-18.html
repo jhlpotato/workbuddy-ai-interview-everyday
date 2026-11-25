@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日 AI 面试题 · 2026-11-18 · AI Agent 记忆系统</title>
+<style>
+  :root {
+    --color-fg: #1f2328;
+    --color-muted: #59636e;
+    --color-link: #0969da;
+    --color-border: #d1d9e0;
+    --color-bg: #ffffff;
+    --color-code-bg: #f6f8fa;
+    --color-header-bg: #24292f;
+    --color-tag-bg: #ddf4ff;
+    --color-quote: #59636e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: var(--color-link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  /* 顶部深色仓库条 */
+  .repo-bar {
+    background: var(--color-header-bg);
+    color: #ffffff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .repo-bar .repo-name { font-weight: 600; font-size: 15px; }
+  .repo-bar .repo-path { color: #b7bdc7; }
+  .repo-bar svg { fill: #ffffff; vertical-align: text-bottom; }
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+    margin: 0 0 20px;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 8px;
+    margin: 36px 0 16px;
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; }
+  p { margin: 12px 0; }
+  blockquote {
+    margin: 12px 0;
+    padding: 0 16px;
+    color: var(--color-quote);
+    border-left: 4px solid var(--color-border);
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 85%;
+    background: var(--color-code-bg);
+    padding: 3px 6px;
+    border-radius: 6px;
+  }
+  pre {
+    background: var(--color-code-bg);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    line-height: 1.45;
+  }
+  pre code { background: transparent; padding: 0; font-size: 13.5px; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 14px 0;
+    font-size: 14.5px;
+    display: block;
+    overflow-x: auto;
+  }
+  th, td { border: 1px solid var(--color-border); padding: 8px 12px; text-align: left; }
+  th { background: var(--color-code-bg); font-weight: 600; }
+  tr:nth-child(2n) td { background: var(--color-code-bg); }
+  .meta {
+    color: var(--color-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--color-tag-bg);
+    color: var(--color-link);
+    border-radius: 999px;
+    padding: 2px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 6px;
+  }
+  .src-list { padding-left: 22px; }
+  .src-list li { margin: 8px 0; }
+  .answer-block {
+    border-left: 3px solid var(--color-link);
+    padding-left: 16px;
+    margin-left: 4px;
+  }
+  hr { border: none; border-top: 1px solid var(--color-border); margin: 32px 0; }
+</style>
+</head>
+<body>
+
+<div class="repo-bar">
+  <svg height="16" width="16" viewBox="0 0 16 16" version="1.1"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path></svg>
+  <span class="repo-name">ai-interview-questions</span>
+  <span class="repo-path">/ 每日推送 / 2026-11-18.md</span>
+</div>
+
+<div class="container">
+  <h1>每日 AI 面试题 · 2026-11-18</h1>
+  <div class="meta">
+    <span class="tag">AI Agent</span>
+    <span class="tag">系统设计 + 编码实现</span>
+    日期：2026-11-18（北京时间） · 来源：牛客网、掘金、CSDN 等公开面经整理
+  </div>
+
+  <h2>【方向】</h2>
+  <p>AI Agent — Agent 记忆系统（Memory）分层设计与上下文工程（系统设计 + 编码实现）</p>
+
+  <h2>【题目及项目背景】</h2>
+  <p>某在线教育公司要为其主 App 打造一个"跨会话个性化学习助理"（日活约 80 万，人均日均对话 12 轮）。技术栈：FastAPI + LangGraph 编排、Qwen 系列模型、PostgreSQL 持久化、Redis 存会话状态、Milvus 向量库。产品要求：助理能记住用户的学习偏好（如"只想要 Python 题""解释要带图示"）、长期目标（如"三个月后考 PMP"）、未完成的任务（中断的学习计划），并在新会话中自然延续，而不是每轮从零开始。</p>
+  <p>团队第一版实现是<strong>把全部历史对话存进向量库，每轮检索 Top-10 直接注入 system prompt</strong>，上线后暴露四类问题：</p>
+  <ol>
+    <li><strong>召回噪音严重</strong>：寒暄、闲聊、一次性信息全部被存入并召回，注入后挤占注意力，关键偏好反而被淹没，用户调研显示"越用越不懂我"；</li>
+    <li><strong>记忆冲突与过时</strong>：用户三个月前说"每天早上 8 点推送学习计划"，两周前改为"改到晚上 9 点"，但旧条目仍在被召回，模型随机采纳其一，答复自相矛盾；</li>
+    <li><strong>上下文成本爆炸</strong>：每轮注入 10 条记忆 + 完整近期对话，单轮输入 Token 高达 2 万，P95 延迟超 6 秒；</li>
+    <li><strong>隐私事故</strong>：一次缓存/过滤缺失导致 A 用户的历史记录片段出现在 B 用户的回答中，引发投诉。</li>
+  </ol>
+  <blockquote><strong>面试题</strong>：请给出该 Agent 记忆系统的完整设计方案，重点阐述：① 记忆的分层架构（短期/工作/长期，以及情景/语义/程序性记忆的划分）与 Memory 和 RAG 的边界；② 写入闸门与反思式写入如何设计（写什么、什么时候写、怎么去重与冲突检测）；③ 检索召回的打分策略与注入的 Token 预算控制；④ 遗忘与冲突治理：时间衰减、过期、降权与"真作废"的区别，如何用 Mem0/Zep 类机制落地；⑤ 手写一个带窗口驱逐、向量召回与上下文组装的最小记忆管理器（核心代码）。</blockquote>
+
+  <h2>【答案详解】</h2>
+  <div class="answer-block">
+
+  <h3>一、原理讲解：上下文窗口不是记忆，分层是第一性原理</h3>
+  <p>记忆系统的锚点是<strong>分层 + 判据</strong>。上下文窗口只是"运行时视图"，真正的记忆是一个<strong>显式的写入→索引→检索→融合→淘汰五层系统</strong>——好的记忆系统不是"记得多"，而是"能在正确时刻拿回正确事实"。</p>
+  <p>按生命周期划分：</p>
+  <table>
+    <tr><th>层次</th><th>典型内容</th><th>生命周期</th><th>常见实现</th></tr>
+    <tr><td>短期记忆</td><td>当前上下文窗口内的消息列表</td><td>一次会话</td><td>消息列表本身，是真正的记忆载体</td></tr>
+    <tr><td>工作记忆</td><td>当前任务的目标、已完成步骤、待办、工具结果中间状态</td><td>一次任务</td><td>结构化 JSON/State 外置，每轮注入投影，不靠模型从长对话里捞</td></tr>
+    <tr><td>长期记忆</td><td>跨会话的稳定偏好、身份事实、历史决策、验证过的经验</td><td>跨会话</td><td>向量库 + 结构化表 + 事件日志，按用户/租户隔离</td></tr>
+  </table>
+  <p>长期记忆再按内容类型三分（认知科学映射）：<strong>情景记忆</strong>（episodic，带时间戳的具体事件："上周三讨论过 XX 方案"）、<strong>语义记忆</strong>（semantic，结构化事实与偏好："用户偏好 Python"）、<strong>程序性记忆</strong>（procedural，把成功轨迹沉淀为规则/few-shot/技能文档——ROI 最高但最常被忽略）。</p>
+  <blockquote><strong>Memory 与 RAG 的边界判据：换一个用户来问，答案会不会变。</strong>变的是记忆（与主体和历史交互有关，在线可写、需治理），不变的是知识（外部知识库，离线只读）。两者机制同源（外部存储→检索→注入），但记忆额外多出写入、更新、遗忘的生命周期管理。把 RAG 说成记忆、或把"全量对话存向量库"说成记忆，是面试最典型的减分点。</blockquote>
+
+  <h3>二、写入闸门与反思式写入：成败 70% 在写什么</h3>
+  <p>第一版方案的病根就是没有写入闸门——没有过滤的追加式写入等于主动制造噪音。</p>
+  <p><strong>写什么</strong>：默认不进长期记忆的——寒暄闲聊、一次性信息、低置信推测、敏感信息；值得写入的候选——明确偏好、稳定身份事实、未完成任务状态、反复出现的问题、经过验证的成功经验。主流做法是<strong>反思式写入</strong>：会话结束或阶段完成时，用 LLM 提取"值得长期保留的事实/偏好/教训"再写入（Generative Agents 的 reflection、Mem0 的事实提取都是此思路）。</p>
+  <p><strong>什么时候写</strong>：事件驱动（用户明确说"记住"、纠正了 Agent、检索没找到答案）+ 周期驱动（会话结束批量反思）+ 收尾驱动（任务成功收尾时沉淀程序性经验）相结合。</p>
+  <p><strong>怎么去重与冲突检测</strong>：新记忆入库前先语义检索近邻，由 LLM 判断新旧关系并输出结构化决策——Mem0 的 <strong>ADD / UPDATE / DELETE / NOOP</strong> 四类操作：全新信息 ADD、修正补充 UPDATE、被证伪或过期 DELETE、与现有记忆一致 NOOP。矛盾记忆的替换必须"有迹可循"，而不是隐式覆盖。</p>
+  <p><strong>每条记忆必须带元信息</strong>：scope（tenant/user/project）、类型、来源、时间、置信度、有效期与权限——否则错误会被长期放大，且无法合规删除。</p>
+
+  <h3>三、检索打分与注入预算：相关性 + 时近性 + 重要性</h3>
+  <p>单纯向量相似度不够。Generative Agents 的经典三分量打分公式是面试高频得分点，务必能默写并解释：</p>
+  <blockquote><strong>Score = w₁ · 相关性(余弦相似度) + w₂ · 时近性(指数衰减 decay^Δt) + w₃ · 重要性(LLM 写入时打 1~10 分)</strong></blockquote>
+  <ul>
+    <li>相关性决定"像不像"；时近性决定"新旧"——越久远权重指数下降；重要性决定"值不值得占预算"，写入时一次性打分，避免每轮重复调用 LLM。</li>
+    <li>检索查询不应等于用户原句：结合当前目标、实体、时间范围和 memory type 做 <strong>query rewriting</strong>，并用结构化过滤（user_id 硬过滤防串号——直接命中本题事故 4）先缩小候选集，再语义召回，最后 Rerank。</li>
+    <li><strong>检索 ≠ 注入</strong>：可以低成本检索候选，但只有通过相关性、权限、时效与冲突校验的内容才进入上下文；候选记忆互相矛盾时标记冲突并询问用户，而不是静默选一版。</li>
+    <li><strong>注入组装顺序</strong>（避免历史偏好被误当当前指令）：系统约束 → 当前任务状态（工作记忆投影）→ 必要的长期记忆 → RAG 证据 → 最近对话 → 当前问题；每条带类型/来源/时间标签。</li>
+    <li><strong>Token 预算</strong>：给记忆设独立预算与 Top-K/阈值，宁少勿多；只对关键记忆附带原文证据，其余用结构化摘要。补充成本手段：中间结果摘要压缩、滑动窗口只留最近 N 轮、分层存储（工具原始数据外置，上下文只放摘要 + 引用 id）、以及<strong>源头收口——工具本身返回摘要而非全量数据</strong>。</li>
+  </ul>
+
+  <h3>四、遗忘与冲突治理：降权 ≠ 作废</h3>
+  <p>这是本题的压轴追问，也是第一版方案事故 2 的解法。先分清四种操作，它们的检索行为完全不同：</p>
+  <table>
+    <tr><th>操作</th><th>检索时行为</th><th>典型实现</th></tr>
+    <tr><td>删除</td><td>不可达（审计线索一起没掉）</td><td>Mem0 的 DELETE</td></tr>
+    <tr><td>过期</td><td>对"现在"不可达，对"当时"（历史回放）可达</td><td>Zep 的 invalid_at / valid_from ~ valid_to</td></tr>
+    <tr><td>降权</td><td>依然可达，只是排名靠后</td><td>Mem0 的 memory decay</td></tr>
+    <tr><td>撤回</td><td>必须不可达</td><td>需自定义（含下游级联）</td></tr>
+  </table>
+  <p><strong>关键洞察：降权适合处理"优先级"，不适合处理"正确性"。</strong>一条已被新事实推翻的旧记忆，哪怕权重压到 0.1 倍，在 Top-K 截断或查询措辞变化时仍可能被重新召回——它带着的信号是"不太相关"而不是"已被推翻"，模型会把作废事实当成"可信度稍低的当前事实"。让错误记忆真正作废，要在<strong>检索阶段强制时间过滤</strong>：每条记忆带有效时间区间（Zep 数据模型的 valid_from / valid_to / invalidated_at / retrieved_at 四时间戳），查询时过滤掉当前时间落在区间外的条目。这套设计对应数据库领域成熟的"系统版本应用时间表"（SQL:2011），Agent Memory 要做的不是发明新机制，而是把现成数据库能力接进语义记忆管理。</p>
+  <p><strong>遗忘的四条路径</strong>：① 时间衰减（长期未访问条目自然降权，可给不同记忆类型设不同半衰期——过敏信息这类低频高价值记忆不能套统一半衰期）；② 访问频率（辅助权重，清理"僵尸记忆"，但不能单独作删除依据）；③ 主动替换（冲突时走 ADD/UPDATE/DELETE/NOOP 决策）；④ 容量上限兜底（淘汰"最旧且访问频率最低"，综合公式：重要性 = 时间衰减因子 × 访问频率权重 × 业务价值系数，高风险场景调高关键信息的价值系数）。<strong>级联作废</strong>：记忆"服务器是 Ubuntu"与"应该用 apt"构成依赖链，前一条被推翻时需沿依赖边级联标记，否则留下孤立的错误推论。</p>
+  <p><strong>隐私与合规</strong>：写入前 PII 脱敏与敏感信息过滤；记忆内容加密 + 访问审计；跨租户绝不共享；强制 user_id 过滤 + 集成测试防串号；用户对自己的记忆必须有查看/删除权（GDPR/个保法要求，也是"说不出怎么删就等于没做过合规"的面试考点）。长上下文模型（1M token）不会让记忆系统过时——成本延迟线性增长、注意力稀释依旧、跨会话持久化仍需外部存储，长窗口只是把"短期记忆"变大了。</p>
+
+  <h3>五、编码实现：最小记忆管理器（窗口驱逐 + 摘要沉淀 + 向量召回 + 结构化画像 + 上下文组装）</h3>
+  <pre><code>import time, json
+import numpy as np
+from collections import deque
+
+class MemoryManager:
+    """覆盖手撕记忆模块核心得分点：窗口驱逐、摘要沉淀、向量召回、
+    结构化画像(upsert)、上下文组装与 Token 预算。
+    生产中向量检索替换为 Milvus/pgvector，画像写入 PostgreSQL。"""
+
+    def __init__(self, llm, embed_fn, window=5, decay=0.99, budget=1200):
+        self.llm, self.embed = llm, embed_fn
+        self.window = window                    # 滑动窗口大小
+        self.decay = decay                      # 时近性指数衰减因子
+        self.budget = budget                    # 记忆注入 Token 预算
+        self.short_term = deque(maxlen=window)  # 短期：窗口消息
+        self.episodic = []                      # 情景：向量库本地版
+        self.semantic = {}                      # 语义：结构化画像 key->(value,ts,imp)
+
+    # ---------- 写路径：反思式写入 + 去重冲突 ----------
+    def reflect_and_write(self, session_text: str):
+        facts = self.llm(f"从以下对话提取值得长期保留的事实/偏好/教训，"
+                         f"输出 JSON 列表[{{'content','type','importance':1-10}}]：\n{session_text}")
+        for f in json.loads(facts):
+            cand = self.embed(f["content"])
+            hit = self._search_vec(cand, k=1, min_sim=0.85)   # 近邻查重
+            if hit and hit[0][1] &gt; 0.92:
+                self.llm(f"新旧记忆：{hit[0][2]} vs {f['content']}，"
+                         "输出 ADD/UPDATE/DELETE/NOOP 决策及新内容")
+                # UPDATE/DELETE 按 id 落库，此处省略
+            else:
+                self.episodic.append({"vec": cand, "text": f["content"],
+                                      "ts": time.time(), "imp": f["importance"]})
+            if f["type"] == "semantic":                        # 画像 upsert
+                self.semantic[f["content"].split(":")[0]] = (f["content"], time.time())
+
+    # ---------- 读路径：三分量打分检索 ----------
+    def _search_vec(self, qvec, k=5, min_sim=0.0):
+        scored = []
+        for i, m in enumerate(self.episodic):
+            sim = float(np.dot(qvec, m["vec"]) /
+                        (np.linalg.norm(qvec) * np.linalg.norm(m["vec"]) + 1e-9))
+            if sim &lt; min_sim:
+                continue
+            recency = self.decay ** ((time.time() - m["ts"]) / 86400)   # 按天指数衰减
+            score = 0.6 * sim + 0.25 * recency + 0.15 * (m["imp"] / 10)
+            scored.append((i, sim, score, m))
+        return sorted(scored, key=lambda x: -x[2])[:k]
+
+    # ---------- 上下文组装：带标签 + Token 预算 ----------
+    def build_context(self, query: str, user_id: str) -&gt; str:
+        parts, used = [], 0
+        for key, (val, _) in self.semantic.items():            # 语义画像优先注入
+            parts.append(f"[偏好|语义记忆] {val}"); used += len(val)
+        qvec = self.embed(query)
+        for _, _, _, m in self._search_vec(qvec, k=5):
+            est = len(m["text"])
+            if used + est &gt; self.budget:                       # 超预算截断
+                break
+            parts.append(f"[事实|{time.strftime('%m-%d', time.localtime(m['ts']))}] {m['text']}")
+            used += est
+        return "\n".join(parts)
+
+    # ---------- 会话推进：窗口驱逐 + 摘要沉淀 ----------
+    def add_message(self, msg: str):
+        evicted = self.short_term[0] if len(self.short_term) == self.window else None
+        self.short_term.append(msg)
+        if evicted:   # 被挤出的早期内容压缩为摘要沉淀，而非丢弃
+            self.reflect_and_write(f"待沉淀摘要：{evicted}")</code></pre>
+  <p><strong>代码讲解（面试官追问点）</strong>：① <code>deque(maxlen=window)</code> 实现窗口驱逐，被挤出的内容触发反思写入而非直接丢弃——保证窗口外信息可通过长期记忆召回；② <code>_search_vec</code> 实现相关性+时近性+重要性三分量打分，权重可按业务调；③ <code>reflect_and_write</code> 用近邻相似度做查重，高相似走 LLM 的 ADD/UPDATE/DELETE/NOOP 决策，实现冲突消解；④ <code>build_context</code> 给记忆带类型与时间标签、按预算截断，语义画像无条件注入、情景记忆按查询相关性注入；⑤ 生产化要点：向量检索换 Milvus 带 <code>user_id</code> 硬过滤、记忆加 <code>valid_from/valid_to</code> 时间区间做检索期过期过滤、写入走异步任务队列避免阻塞主链路、全链路记录检索命中率与记忆引用率用于评估。</p>
+  <blockquote><strong>答题点睛</strong>：一段话收束——"Agent 记忆的本质不是把对话存进向量库，而是建一个有治理的状态系统：分层（窗口/工作/长期）定边界，写入闸门 + 反思式提取定质量，三分量打分 + 预算注入定效率，时间区间过滤 + ADD/UPDATE/DELETE/NOOP 定正确性，PII 脱敏 + 用户删除权定合规；评估它对任务成功率、重复询问率和错误记忆引用率的真实贡献，而不是只看记住了多少。"</blockquote>
+  </div>
+
+  <h2>【来源平台】</h2>
+  <ul class="src-list">
+    <li>牛客网 ·《【三年面试五年模拟】2026-07-21 月之暗面 AI Agent 开发岗一面面经（含完整答案）》——长期记忆检索触发条件、多级门控、query rewriting、检索与注入的区分、长短期冲突优先级、Token 预算与 Top-K 阈值：<a href="https://ac.nowcoder.com/discuss/1670524">https://ac.nowcoder.com/discuss/1670524</a></li>
+    <li>牛客网 ·《2026-07-22 淘天 Agent 社招一面面经分享（含完整答案）》——Skill/Memory/RAG 三组件边界、记忆模块迭代更新与新旧经验冲突取舍、写入治理链路：<a href="https://www.nowcoder.com/discuss/909920471301226496">https://www.nowcoder.com/discuss/909920471301226496</a></li>
+    <li>牛客网 ·《2026-08-02 阿里巴巴 AI Agent 开发岗暑期实习面经全解析》——记忆分层（短期/长期/工作）、写入前重要性判断/去重/冲突检测/敏感过滤、身份层级 tenant→user→conversation→task：<a href="https://www.nowcoder.com/issue/tutorial?uuid=325adfb32c4c4fd68a5662fbc7f55abe&amp;zhuanlanId=0k8Wbm">https://www.nowcoder.com/issue/tutorial?uuid=325adfb32c4c4fd68a5662fbc7f55abe&amp;zhuanlanId=0k8Wbm</a></li>
+    <li>掘金 ·《面试官问：「你们 Agent 的 Memory 是怎么做的？」——答「存进向量库」就已经出局了》——三层记忆拆分、episodic/semantic/procedural 分类、Memory 与 RAG 边界判据、写入闸门、注入预算、隐私合规与踩坑清单：<a href="https://juejin.cn/post/7704580559901360168">https://juejin.cn/post/7704580559901360168</a></li>
+    <li>掘金 ·《Agent 开发岗面试问答手册（口述版）》——腾讯记忆机制三问（短期/工作/长期分层、写入策略）、上下文压缩三招与源头收口：<a href="https://juejin.cn/post/7698533148760522793">https://juejin.cn/post/7698533148760522793</a></li>
+    <li>CSDN 博客 ·《agent记忆系统》——删除/过期/降权/撤回四种操作语义对比、Mem0 memory decay 与 Zep 四时间戳模型、降权与"真作废"的区别、级联作废：<a href="https://blog.csdn.net/liushuidehao/article/details/164394895">https://blog.csdn.net/liushuidehao/article/details/164394895</a></li>
+    <li>CSDN 博客 ·《美团三面被问：Agent 如何记忆你说了，那该如何遗忘呢？》——时间衰减/访问频率/主动替换/容量上限四条遗忘路径、Mem0 ADD/UPDATE/DELETE/NOOP 决策、重要性评分公式：<a href="https://blog.csdn.net/excellent_fish_c/article/details/161961316">https://blog.csdn.net/excellent_fish_c/article/details/161961316</a></li>
+    <li>CSDN DevPress ·《智能体面试准备（六）：Agent 记忆系统设计——短期、长期与向量记忆的架构与实现》——Generative Agents 相关性+时近性+重要性打分公式、反思式写入、手撕记忆管理器得分点、高频题速答：<a href="https://devpress.csdn.net/xclaw/6a802403662f9a54cb9d11d1.html">https://devpress.csdn.net/xclaw/6a802403662f9a54cb9d11d1.html</a></li>
+  </ul>
+
+</div>
+</body>
+</html>

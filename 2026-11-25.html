@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日 AI 面试题 · 2026-11-25 · AI Agent 编码智能体（Code Agent）系统设计</title>
+<style>
+  :root {
+    --color-fg: #1f2328;
+    --color-muted: #59636e;
+    --color-link: #0969da;
+    --color-border: #d1d9e0;
+    --color-bg: #ffffff;
+    --color-code-bg: #f6f8fa;
+    --color-header-bg: #24292f;
+    --color-tag-bg: #ddf4ff;
+    --color-quote: #59636e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: var(--color-link); text-decoration: none; word-break: break-all; }
+  a:hover { text-decoration: underline; }
+  .repo-bar {
+    background: var(--color-header-bg);
+    color: #ffffff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .repo-bar .repo-name { font-weight: 600; font-size: 15px; }
+  .repo-bar .repo-path { color: #b7bdc7; }
+  .repo-bar svg { fill: #ffffff; vertical-align: text-bottom; }
+  .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 28px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin: 0 0 20px; }
+  h2 { font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--color-border); padding-bottom: 8px; margin: 36px 0 16px; }
+  h3 { font-size: 18px; font-weight: 600; margin: 28px 0 12px; }
+  h4 { font-size: 16px; font-weight: 600; margin: 22px 0 10px; }
+  p { margin: 12px 0; }
+  blockquote { margin: 12px 0; padding: 0 16px; color: var(--color-quote); border-left: 4px solid var(--color-border); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 85%;
+    background: var(--color-code-bg);
+    padding: 3px 6px;
+    border-radius: 6px;
+  }
+  pre { background: var(--color-code-bg); border-radius: 8px; padding: 16px; overflow-x: auto; line-height: 1.45; }
+  pre code { background: transparent; padding: 0; font-size: 13.5px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
+  th, td { border: 1px solid var(--color-border); padding: 8px 12px; text-align: left; }
+  th { background: var(--color-code-bg); font-weight: 600; }
+  tr:nth-child(2n) td { background: var(--color-code-bg); }
+  .meta { color: var(--color-muted); font-size: 14px; margin-bottom: 24px; }
+  .tag { display: inline-block; background: var(--color-tag-bg); color: var(--color-link); border-radius: 999px; padding: 2px 12px; font-size: 13px; font-weight: 500; margin-right: 6px; }
+  hr { border: none; border-top: 1px solid var(--color-border); margin: 32px 0; }
+  ul, ol { padding-left: 26px; }
+  li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="repo-bar">
+  <svg height="16" width="16" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.249.249 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+  <span class="repo-name">ai-interview-questions</span>
+  <span class="repo-path">/ 每日推送 / 2026-11-25</span>
+</div>
+<div class="container">
+<div class="meta"><span class="tag">日期：2026-11-25</span><span class="tag">方向：AI Agent · 编码智能体（Code Agent）系统设计</span><span class="tag">类型：理论原理 + 系统设计 + 编码实现</span></div>
+<h1>每日 AI 面试题 · 2026-11-25 · AI Agent — 编码智能体（Code Agent）系统设计</h1>
+
+<h2>【方向】</h2>
+
+<p>AI Agent — 编码智能体（Code Agent）系统设计（Agent Loop 核心循环与终止治理、仓库上下文引擎与渐进披露、编辑表示与 diff 应用、执行反馈闭环与沙箱、上下文压缩与长任务 Harness、安全护栏与回滚，理论原理 + 系统设计 + 编码实现）</p>
+
+<h2>【题目及项目背景】</h2>
+
+<p>某开发者工具公司（服务约 2000 家企业客户、日活开发者约 15 万）要打造一款企业级<strong>编码智能体（Code Agent）</strong>：开发者用自然语言描述任务（如"把订单服务的支付回调改成幂等，并补齐回归测试"），Agent 在仓库内自主完成理解代码 → 规划改动 → 多文件编辑 → 运行构建与测试 → 根据报错自我修复 → 输出可评审的 diff/PR。产品形态对标 Claude Code（终端 Agent）、Cursor Composer（IDE 内 Agent）与 Devin（长时自主 Agent），单任务典型执行 15~40 步、耗时 3~15 分钟，涉及读代码、编辑、执行 shell 命令三类工具。</p>
+
+<p>团队第一版实现是<strong>"全量上下文 + 全文件重写 + 直接在本机执行"</strong>：把模型认为相关的文件整个塞进上下文，让模型输出完整的新文件内容直接覆盖，命令在开发者本机 shell 执行。灰度一个月暴露四类典型问题：</p>
+
+<ul>
+<li><strong>大仓库上下文放不下、且塞进去也没用</strong>：单体仓库超过 50 万行代码，相关文件全量注入动辄数十万 token，成本爆炸且超出窗口；而一旦改用向量检索，索引又频繁过时（代码天天在改），召回一堆改名前的旧函数，模型基于陈旧上下文写出的代码编译都过不了；</li>
+<li><strong>全文件重写又贵又危险</strong>：让模型重写一个 800 行的文件，只为改 3 行——token 成本是 diff 的几十倍，且重写时容易"顺手"改动无关逻辑、丢掉末尾函数（大文件截断），一次误覆盖让同事的半成品功能直接丢失，且没有任何回滚手段；</li>
+<li><strong>死循环与预算失控</strong>：测试失败后模型用完全相同的 patch 反复重试，单任务跑到 60+ 轮还没停；个别任务上下文被巨大的测试日志撑爆后模型开始胡言乱语，把无关文件改得一塌糊涂；</li>
+<li><strong>安全与信任危机</strong>：Agent 在本机 shell 里执行了 <code>git push --force</code> 和一条删库的清理脚本；企业客户质疑"我的代码会不会被拿去训练、Agent 会不会偷偷联网把代码发出去"，销售侧被逼着逐条解释。</li>
+</ul>
+
+<p>面试题：<strong>请给出该编码智能体的完整设计方案，重点阐述：① 为什么生产级 Code Agent 的骨架是"简单循环（loop）而非复杂状态图（graph）"，核心循环的标准形态与四类终止条件（done 工具 / 步数上限 / 预算上限 / 停滞检测）如何设计；② 仓库上下文引擎怎么建：混合策略（常驻规则文件 + 渐进披露 + Agent 自主探索）为什么优于纯向量索引，Cursor 式增量索引（Merkle 树 + Tree-sitter AST 切分 + 混合检索）的管线与适用边界；③ 编辑表示如何选型（全文件重写 vs unified diff vs search/replace block），diff 打不上（模糊锚点）如何兜底，为什么要原子应用与 checkpoint 回滚；④ 执行反馈闭环：为什么"测试/linter/编译器是免费的完美 critic"、不需要 LLM critic；上下文污染治理（工具结果截断、历史压缩 compaction、子代理干净上下文、结构化笔记与 context reset）如何落地；⑤ 安全护栏：沙箱隔离、权限分级、写门槛与不可逆操作拦截、防死循环预算控制，以及如何用 SWE-bench 类基准做发布门禁；⑥（编码）现场实现核心 Agent Loop + 编辑应用器 + 安全护栏的最小可用代码。</strong></p>
+
+<hr>
+
+<h2>【答案详解】</h2>
+
+<h3>一、核心循环：为什么是"简单 loop"而不是"复杂 graph"</h3>
+
+<p><strong>1. 生产系统的收敛结论。</strong> Claude Code、Codex、Cursor 的底层是同一个东西——一个 while 循环：模型产出工具调用就执行、把结果喂回去、直到模型不再调用工具或触发预算。早期的复杂 DAG 方案（"用户想 X 就去节点 A"）被普遍放弃，因为每条硬编码的转移都是一个潜在故障点，而现代模型完全有能力在循环内自己探索、犯错、自我修正。工程共识可以概括为一句话：<strong>循环本身已经没有秘密，秘密全在循环外面</strong>——上下文管理、安全控制、优雅降级、成本约束才是决定 Agent 能否进生产的关键。</p>
+
+<p><strong>2. 标准循环形态。</strong></p>
+
+<pre><code>
+while True:
+    resp = model.generate(system + memory + history + tools)
+    if resp.tool_calls 为空: break          # 模型给出最终答案
+    results = execute_tools(resp.tool_calls) # 并行执行 + 安全护栏
+    history.append(results)                  # 观察回灌，驱动下一轮
+</code></pre>
+
+<p>它的进化分三个段位：Level 1（LLM + Tools 直调）只够做 demo；Level 2 把<strong>记忆读写放进循环</strong>（调用前读、工具执行后写），循环从"工具调用量传输带"变成推理引擎；Level 3 在循环外再包一层 Harness——记忆层（CLAUDE.md 类规则文件每轮注入）、反馈层（测试/Linter 报错自动回灌形成自修复闭环）、编排层（大任务拆成有验收标准的子任务，防止无终点空转）。</p>
+
+<p><strong>3. 四类终止条件缺一不可</strong>（这是面试必考点，缺任何一个都会在长任务上翻车）：</p>
+
+<table>
+<tr><th>终止条件</th><th>作用</th><th>典型实现</th></tr>
+<tr><td>显式 done 工具</td><td>模型主动宣告完成，优于"输出纯文本即结束"的模糊信号</td><td>强制要求调用 <code>task_done(summary)</code> 才算结束</td></tr>
+<tr><td>max_iters 步数上限</td><td>兜底防失控，编码 Agent 经验值 20~30 轮（Claude Code 单个子任务默认 25）</td><td>硬编码在 Harness，不接受提示词覆盖</td></tr>
+<tr><td>预算上限（token/美元）</td><td>把成本从"事故"变成"参数"</td><td>网关侧累计计费，超限暂停并通知用户</td></tr>
+<tr><td>停滞检测</td><td>治"重复调用相同工具+相同参数"的死循环</td><td>维护 <code>(tool, 参数哈希)</code> 近期集合，重复 N 次即升级人工</td></tr>
+</table>
+
+<p>注意：<strong>提示词里写"不要死循环"防不住</strong>——与 Prompt Injection 同源，模型输出是不可信的。终止逻辑必须由 Harness 代码保证，这正是 AutoGPT"无限烧钱"教训之后的行业共识：每个后续 Agent 设计都在补这四条。</p>
+
+<p><strong>4. 主流产品的形态对照</strong>（体现"同一循环、不同外壳"）：Claude Code 是 ReAct 循环 + TodoWrite 外置计划 + 子代理派发；Cursor Agent 是同型循环 + 编辑器内 diff 预览/接受作为每步人工闸门；Devin 是显式 Planner-Executor-Verifier 三段 + 云端持久 VM；Aider 循环极短（读文件 → 提 diff → 应用 → 跑测试），因为任务类别有界，紧凑恰恰是优点。</p>
+
+<h3>二、仓库上下文引擎：混合策略优于纯向量索引</h3>
+
+<p><strong>1. 为什么"全量塞入"和"纯 RAG"都不对。</strong> 全量塞入受限于窗口与成本；纯向量索引有致命缺陷——代码是强结构、强关键词的文本，且天天在改，索引天然滞后。Anthropic 在上下文工程文章中给出的结论是<strong>混合策略</strong>：少量高价值常驻上下文（<code>CLAUDE.md</code> 项目规则）直接预置进上下文，其余交给 Agent 用 <code>glob</code>/<code>grep</code>/读文件等原语<strong>自主探索、渐进披露（progressive disclosure）</strong>——每次交互产出的信息（文件名、目录结构、import 关系）决定下一步看哪里，Agent 像人一样逐层建立理解，只把必要内容留在工作记忆里。这样做的好处是<strong>永远不会引用过时索引</strong>（看到的永远是磁盘上的真实文件），代价是探索多花几轮。Claude Code 正是该模式的范本：CLAUDE.md 预置 + grep/glob 即时检索，绕开了陈旧索引与复杂语法树的维护成本。</p>
+
+<p><strong>2. 需要预计算索引时的标准管线（Cursor 式）。</strong> 当仓库巨大、探索成本过高时，Cursor 的做法值得抄：</p>
+
+<ul>
+<li><strong>Merkle 哈希树增量索引</strong>：按文件树算哈希，只重嵌自上次索引以来变化的文件，避免全量重扫；</li>
+<li><strong>Tree-sitter AST 结构化切分</strong>：按函数/类/接口边界切块，而非固定 token 窗口——代码检索的正确单位是"符号"而不是"段落"；</li>
+<li><strong>混合检索</strong>：向量（HNSW）+ BM25 关键词倒排双路召回，Cross-Encoder 重排取 Top-N；代码问题里"精确符号名"的场景极多，纯语义召回会答非所问；</li>
+<li><strong>父子上文</strong>：检索命中函数级 chunk，注入时带上所属文件骨架，兼顾精度与完整语境。</li>
+</ul>
+
+<p><strong>3. 分层上下文设计（与 Prompt Caching 联动）。</strong> 上下文应分三层：<strong>常驻层</strong>（系统提示 + 工具 Schema + 项目规则）保持精简稳定，是前缀缓存命中率的基础；<strong>领域层</strong>（Skills/操作手册）按需加载，触发由工程侧每轮扫描保证，不能指望模型自己记得；<strong>运行时层</strong>（文件内容、命令输出）动态注入、用完即可截断。这也解释了为什么同一个模型在 Cursor/Claude Code/Windsurf 上效果天差地别——选工具选的是上下文工程的实现水平。</p>
+
+<p><strong>4. Aider 的 repo map 是第三条路线</strong>：不走向量库，而是用 tree-sitter 抽取全仓库符号表生成一张"仓库地图"（每个文件的符号签名列表）常驻上下文，模型看地图决定打开哪些文件。实现轻、无索引过时问题，适合中小仓库，是面试中体现方案多样性的加分项。</p>
+
+<h3>三、编辑表示与 diff 应用：从"全文件重写"到"结构化补丁"</h3>
+
+<p><strong>1. 三种格式对比：</strong></p>
+
+<table>
+<tr><th>编辑格式</th><th>优点</th><th>缺点</th><th>结论</th></tr>
+<tr><td>全文件重写</td><td>无需对齐、最不易失败</td><td>token 成本随文件大小线性膨胀；长文件易截断丢内容；模型"顺手"改无关代码</td><td>仅适合小文件/新建文件</td></tr>
+<tr><td>unified diff</td><td>精确省 token；人类可读可评审</td><td>模型算不准行号，<code>@@</code> 偏移经常错</td><td>不建议让模型直接产出</td></tr>
+<tr><td>search/replace block（Aider/Claude Code Edit 风格）</td><td>模型只需复制原文再给新文，无需行号；成功率最高</td><td>原文匹配失败需兜底</td><td>生产主流</td></tr>
+</table>
+
+<p><strong>2. 模糊锚点兜底。</strong> 模型复制的"原文"经常与磁盘内容有细微出入（空白差异、轻微改写）。落地要点：精确匹配失败 → 做空白归一化匹配 → 再失败用模糊匹配（编辑距离/锚点对齐，类似 Myers diff 的模糊 anchor）在文件中定位最相似区段，相似度低于阈值才报错把冲突信息回灌给模型重试。Aider 的实践表明，这一层"容错应用器"是 search/replace 方案能用起来的关键——<strong>Agent 的编辑成功率瓶颈往往不在模型，而在 patch 应用器</strong>。</p>
+
+<p><strong>3. 原子应用与 checkpoint 回滚（不可妥协的工程底线）。</strong> 每次文件变更前先落 checkpoint（git commit 或快照），patch 原子应用：要么全部成功要么全部回滚，绝不留下半编辑状态；整个任务提供一键回滚到任务起点。这既是安全网（模型改坏可恢复），也是信任前提（用户敢放手让 Agent 跑）。</p>
+
+<p><strong>4. 为什么"diff 而非重写"同时也是上下文治理</strong>：diff 输出只包含变更行，token 少一个数量级、错误概率更低，还天然适配 IDE 的 diff 预览/逐块接受交互（Cursor 把它做成每步人工闸门）。</p>
+
+<h3>四、执行反馈闭环：免费的完美 critic 与上下文治理</h3>
+
+<p><strong>1. 代码是"反馈最廉价"的 Agent 领域。</strong> 学术界试过 Actor-Critic 双模型（一个改、一个审），但工程上基本被淘汰，原因一句话：<strong>跑测试是免费、确定、完美的 critic</strong>——编译器告诉你能不能解析，测试套件告诉你对不对，Linter 告诉你干不干净，没有任何 LLM critic 比得上"测试通过"这个信号。所以编码 Agent 的核心闭环是：改代码 → 跑构建/测试 → 解析失败信息 → 结构化回灌 → 模型自修复。面试加分点：如果在编码 Agent 里想加 LLM critic，先自问"测试/Linter/类型检查能不能给同样信号"——免费 critic 永远优于学习出来的 critic（LLM critic 的正确用武之地是反馈缓慢、噪声大、缺失的领域，如研究型 Agent）。</p>
+
+<p><strong>2. 上下文污染治理四件套</strong>（案例里"测试日志撑爆上下文后胡言乱语"的解法）：</p>
+
+<ul>
+<li><strong>工具结果截断</strong>：在 formatter 层把命令输出按行数/字节截断，错误信息保留头尾、中间折叠；这是治"上下文炸弹"的第一杠杆；</li>
+<li><strong>Compaction 压缩</strong>：历史接近窗口上限时，让模型把对话史压缩成摘要再重开窗口——保留架构决策、未解决 bug、实现细节，丢弃陈旧的原始工具输出（工具结果一旦用完就没必要留着原文）；调优原则是先最大化召回再提精度；</li>
+<li><strong>子代理干净上下文</strong>：探索性、产出巨大的子任务（读一堆文档找答案、跑长测试）派给子代理，它返回<strong>结论</strong>而非过程，避免污染主循环（Claude Code 的 Task 工具即此模式；但注意 Anthropic 新 guidance：新模型能力足够时优先收敛到单循环，子代理按"上下文边界"划分而非按问题类型划分，避免电话游戏式的信息衰减）；</li>
+<li><strong>结构化笔记 + Context Reset</strong>：长任务跨多个上下文窗口时，让 Agent 把计划与进度写进持久产物（TodoWrite、progress 文件、feature 清单），新窗口的 Agent 靠"笔记 + git 历史"快速恢复状态——Anthropic 长时 Agent 实验的关键发现是：光靠 compaction 不够，模型会有"上下文焦虑"（临近窗口上限就草草收工）与一次性 one-shot 大任务的倾向，<strong>_initializer agent 建环境 + coding agent 每窗口增量推进并留干净状态_</strong> 的双角色 Harness 才能跨窗口持续工作；planner/generator/evaluator 三代理结构还能治"自我评价偏宽松"的问题。</li>
+</ul>
+
+<p><strong>3. 落地清单</strong>：每轮记录完整 Thought/Action/Observation trace（不记 trace 就无法归因失败）；命令一律设超时并自动杀后台进程；把"半成品修改"写成可验收的子任务粒度，一个窗口只推进一个 feature。</p>
+
+<h3>五、安全护栏：模型永远不是安全边界</h3>
+
+<p><strong>1. 沙箱隔离。</strong> Agent 执行的每条 shell 命令都不可信。云端方案按会话起隔离环境（容器/Firecracker microVM，配网络白名单与资源上限）；本机方案（Claude Code 类）必须至少做到：文件系统读写范围限定在项目目录、网络默认禁用或白名单、命令在低权限用户/命名空间中执行。能力再强的模型也不能给它"直接跑在本机用户态"的信任。</p>
+
+<p><strong>2. 权限分级 + 写门槛 + 不可逆拦截。</strong> 工具按风险分级：读操作自动放行；写操作按范围决定是否需要确认（Cursor 的 diff 逐块接受即是写门槛的交互形态）；<strong>不可逆操作</strong>（<code>git push --force</code>、删库、外发数据）由<strong>硬编码护栏层</strong>拦截——护栏是确定性代码而非提示词，命中即强制人工批准或直接拒绝。所有确认必须可撤销、默认最小权限。</p>
+
+<p><strong>3. 防死循环与预算</strong>：见第一节四类终止条件，强调预算上限和重复检测必须在 Harness 侧实现。</p>
+
+<p><strong>4. 隐私与合规</strong>（企业客户三连问的标准答案）：企业版提供零数据保留（ZDR）协议与 Privacy Mode（本地 embedding、不落服务端）；代码索引支持客户端侧本地化；以 SOC 2 等认证作为合同要求。</p>
+
+<p><strong>5. 发布门禁</strong>：用 SWE-bench Verified 类真实缺陷修复基准构建评测 Harness，模型/prompt 每次变更先跑基准回归，达标才发布——"改 prompt = 改代码"拥有同等回归纪律。</p>
+
+<h3>六、核心代码：Agent Loop + 编辑应用器 + 安全护栏</h3>
+
+<pre><code>
+# code_agent.py — 编码智能体最小可用内核
+# 三层结构：AgentLoop（循环+终止治理）/ PatchApplier（编辑应用）/ Guard（安全护栏）
+import re, json, hashlib, subprocess, difflib
+from dataclasses import dataclass, field
+from pathlib import Path
+
+MAX_ITERS = 25
+MAX_BUDGET_USD = 2.0
+BANNED_PATTERNS = [r&quot;rm\s+-rf\s+/&quot;, r&quot;git\s+push\s+.*--force&quot;, r&quot;drop\s+table&quot;, r&quot;curl.*\|\s*sh&quot;]
+
+@dataclass
+class Turn: role: str; content: str; tool_calls: list = field(default_factory=list)
+
+class Guard:
+    &quot;&quot;&quot;确定性安全护栏：模型输出不可信，拦截必须由代码而非提示词保证&quot;&quot;&quot;
+    @staticmethod
+    def check_command(cmd: str) -&gt; str | None:
+        for p in BANNED_PATTERNS:
+            if re.search(p, cmd, re.I):
+                return f&quot;被护栏拦截：命中不可逆/高危模式 {p}&quot;
+        return None
+
+class PatchApplier:
+    &quot;&quot;&quot;search/replace 编辑应用器：精确匹配 -&gt; 空白归一化 -&gt; 模糊锚点兜底&quot;&quot;&quot;
+    @staticmethod
+    def _norm(s: str) -&gt; str: return re.sub(r&quot;[ \t]+&quot;, &quot; &quot;, s.strip())
+
+    @classmethod
+    def apply(cls, path: str, old: str, new: str) -&gt; str:
+        text = Path(path).read_text(encoding=&quot;utf-8&quot;)
+        if old in text:                                    # 1) 精确匹配
+            return Path(path).write_text(text.replace(old, new, 1), encoding=&quot;utf-8&quot;) or &quot;ok&quot;
+        lines = text.splitlines(keepends=True); old_l = old.splitlines(keepends=True)
+        # 2) 空白归一化匹配
+        norm = [cls._norm(l) for l in lines]; nold = [cls._norm(l) for l in old_l]
+        for i in range(len(norm) - len(nold) + 1):
+            if norm[i:i+len(nold)] == nold:               # 命中：仅替换该区段
+                lines[i:i+len(nold)] = [l + &quot;\n&quot; for l in new.splitlines()]
+                Path(path).write_text(&quot;&quot;.join(lines), encoding=&quot;utf-8&quot;); return &quot;ok(fuzzy-ws)&quot;
+        # 3) 模糊锚点：找相似度最高的区段，低于阈值回灌错误让模型重试
+        best, score = -1, 0.0
+        for i in range(len(lines) - len(nold) + 1):
+            r = difflib.SequenceMatcher(None, norm[i:i+len(nold)], nold).ratio()
+            if r &gt; score: best, score = i, r
+        if best &gt;= 0 and score &gt; 0.9:
+            lines[best:best+len(nold)] = [l + &quot;\n&quot; for l in new.splitlines()]
+            Path(path).write_text(&quot;&quot;.join(lines), encoding=&quot;utf-8&quot;)
+            return f&quot;ok(fuzzy score={score:.2f})&quot;
+        return f&quot;error: 匹配失败(最高相似度 {score:.2f})，请重新读取文件后给出精确原文&quot;
+
+@dataclass
+class Budget:
+    iters: int = 0; usd: float = 0.0
+    recent: dict = field(default_factory=dict)   # (tool, 参数哈希) -&gt; 连续出现次数
+
+    def observe(self, tool: str, args: dict):
+        key = (tool, hashlib.md5(json.dumps(args, sort_keys=True).encode()).hexdigest())
+        self.recent[key] = self.recent.get(key, 0) + 1
+        return self.recent[key] &gt;= 3            # 同参数重复 &gt;=3 次 → 停滞
+
+class AgentLoop:
+    def __init__(self, model, tools): self.model, self.tools = model, tools
+
+    def run(self, task: str, cwd: str):
+        history = [Turn(&quot;user&quot;, task)]; budget = Budget()
+        for _ in range(MAX_ITERS):                       # 终止条件②：步数上限
+            resp = self.model.generate(history)          # 终止条件④：预算累计在网关侧
+            budget.usd += resp.cost_usd
+            if budget.usd &gt; MAX_BUDGET_USD: return &quot;budget_exceeded: 已暂停并通知用户&quot;
+            history.append(Turn(&quot;assistant&quot;, resp.text, resp.tool_calls))
+            if not resp.tool_calls:                      # 终止条件①：模型自然收尾
+                return resp.text
+            for call in resp.tool_calls:
+                if err := self._dispatch(call, history, budget, cwd): return err
+        return &quot;max_iters: 达到步数上限，输出当前进度供人工接管&quot;
+
+    def _dispatch(self, call, history, budget, cwd) -&gt; str | None:
+        # 终止条件③：停滞检测 —— 相同工具+相同参数连续出现即升级人工
+        if budget.observe(call.name, call.args):
+            history.append(Turn(&quot;tool&quot;, &quot;检测到重复停滞，已暂停，请人工确认下一步&quot;)); return &quot;stagnation_paused&quot;
+        try:
+            result = self.tools[call.name](**call.args, cwd=cwd)   # 工具内部再过 Guard
+            summary = result if len(str(result)) &lt; 2000 else str(result)[:2000] + &quot;\n...[截断]&quot;
+        except Exception as e:
+            summary = f&quot;error: {type(e).__name__}: {e}&quot;   # 失败结构化回灌，模型自修复
+        history.append(Turn(&quot;tool&quot;, f&quot;[{call.name}] {summary}&quot;))
+        return None
+
+# 工具示例：run_cmd（护栏内）、edit_file（PatchApplier）
+def run_cmd(cmd: str, cwd: str, timeout: int = 60):
+    if err := Guard.check_command(cmd): return f&quot;error: {err}&quot;
+    r = subprocess.run(cmd, shell=True, cwd=cwd, timeout=timeout,
+                       capture_output=True, text=True)
+    out = (r.stdout or &quot;&quot;) + (r.stderr or &quot;&quot;)
+    lines = out.splitlines()
+    return &quot;\n&quot;.join(lines[:100] + [&quot;...[截断]&quot;] + lines[-20:]) if len(lines) &gt; 120 else out
+
+def edit_file(path: str, old: str, new: str, cwd: str):
+    return PatchApplier.apply(str(Path(cwd) / path), old, new)
+</code></pre>
+
+<p>落地要点标注：<code>Guard</code> 是硬编码护栏（提示词防不住高危命令）；<code>PatchApplier</code> 三级匹配是 diff 成功率的关键；<code>Budget.observe</code> 即停滞检测；工具结果统一截断治上下文炸弹；每次 <code>edit_file</code> 前生产版应先 <code>git stash/commit</code> 落 checkpoint 支持一键回滚。生产化还需补齐：并行工具执行、结构化笔记（todo/progress 文件）与跨窗口 Handoff、SWE-bench 类回归门禁。</p>
+
+<hr>
+
+<h2>【来源平台】</h2>
+
+<blockquote><p>以下链接均来自本次真实搜集结果，检索于 2026-11-25，全部经 HTTP 状态码核验可公开访问。</p></blockquote>
+
+<ul>
+<li><strong>掘金</strong> —《大家都在聊的 Agent，它的原理、架构和最佳工程实践，到底应该是怎样的？只看这篇就够了！》：系统阐述 Agent Loop 应保持极简、ACI 工具设计、Harness（Linter/Hook 机制化约束优于提示词）、上下文分层（常驻层/Skills 按需加载/运行时层）与 Context Rot、记忆系统。<a href="https://juejin.cn/post/7624741570784968746">https://juejin.cn/post/7624741570784968746</a></li>
+<li><strong>掘金 AI 编程</strong> —《6 行代码就能跑的 Agent，Claude Code、Codex、Cursor 的同一底层》：Agent Loop 三个段位（Tools 直调 → 记忆进循环 → Harness 四层：记忆/反馈/编排/执行），"循环已无秘密，工程在循环外"。<a href="https://aicoding.juejin.cn/post/7650407855255158824">https://aicoding.juejin.cn/post/7650407855255158824</a></li>
+<li><strong>掘金</strong> —《我们放弃了"全自动生成代码"——网盘 Coding Agent 落地与迭代实录》：一线团队放弃一次性全自动流水线、转向 Agentic Engineering Loop 多轮反馈（观察—决策—修改—验证—复盘）与需求打磨为可验证起点的实战记录。<a href="https://oj.juejin.cn/post/7698633520738238479">https://oj.juejin.cn/post/7698633520738238479</a></li>
+<li><strong>牛客网</strong> —《【面试真题】美团 Agent 方向面经整理（思路引导 + 推荐回答）》：harness 工程定义（可重复环境+打分+日志）、工具循环调用治理（限步/重复检测/完成信号）、Tool 与 Skill 区别等真题与推荐答法。<a href="https://ac.nowcoder.com/discuss/1639746">https://ac.nowcoder.com/discuss/1639746</a></li>
+<li><strong>牛客网</strong> —《快手 Agent 开发二面经典面经》：Agent Harness 搭建、沙箱需隔离的资源和操作与权限控制、无人工审核场景的错误率控制（验证/回滚/限额/监控）、AI Coding 多实例并发任务隔离等原题。<a href="https://nowcoder.com/discuss/944882264687534080">https://nowcoder.com/discuss/944882264687534080</a></li>
+<li><strong>牛客网</strong> —《Agent 面经汇总（含答题思路）》：Agent 核心组件、ReAct 执行流程、工具调用失败处理（重试/降级/结构化错误回灌/防死循环）等高频题。<a href="https://www.nowcoder.com/discuss/891332286421929984">https://www.nowcoder.com/discuss/891332286421929984</a></li>
+<li><strong>Anthropic 工程博客</strong> —《Effective harnesses for long-running agents》：长时编码 Agent 的 initializer agent + coding agent 双角色 Harness、claude-progress.txt 结构化交接、跨上下文窗口增量推进。<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents</a></li>
+<li><strong>Anthropic Research</strong> —《Effective context engineering for AI agents》：混合上下文策略（CLAUDE.md 预置 + grep/glob 渐进披露）、compaction 压缩原则（先保召回再提精度）、结构化笔记与多代理架构。<a href="https://anthropic.com/research/effective-context-engineering-for-ai-agents">https://anthropic.com/research/effective-context-engineering-for-ai-agents</a></li>
+<li><strong>Claude 官方资源</strong> —《Building agents: When to fold subagents into your main agent loop》：单循环优先的设计哲学、按上下文边界而非问题类型划分子代理、避免"电话游戏"信息衰减。<a href="https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop">https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop</a></li>
+<li><strong>TechInterview</strong> —《Cursor AI System Design &amp; Architecture Guide [2026]》：Cursor 的 Merkle 树增量索引、Tree-sitter AST 切分、HNSW+BM25 混合检索、Fast Apply 模糊锚点 diff 应用、Composer 死循环防护（迭代预算+重复检测+回滚）、ZDR 隐私方案。<a href="https://www.techinterview.net/blog/cursor-ai-ide-interview-guide">https://www.techinterview.net/blog/cursor-ai-ide-interview-guide</a></li>
+<li><strong>Codemia</strong> —《Building a Code Agent: Case Study》：Claude Code/Cursor/Devin/SWE-agent/Aider 主流编码 Agent 架构对照、"测试是免费完美 critic、无需 LLM critic"论断、patch+test 内循环与文件导航外循环。<a href="https://codemia.io/courses/applied_ai_systems/building_a_code_agent_case_study">https://codemia.io/courses/applied_ai_systems/building_a_code_agent_case_study</a></li>
+</ul>
+<li><strong>Context Engineering Blog（ctxt.dev）</strong> —《Claude Code Architecture: Why a Simple Loop Beat Complex Graphs》：while 循环替代复杂 DAG 的架构复盘、Bash 作为通用适配器、子代理/diff/todo 的上下文治理三件套。<a href="https://ctxt.dev/posts/en/claude-code-architecture">https://ctxt.dev/posts/en/claude-code-architecture</a></li>
+</div>
+</body>
+</html>
